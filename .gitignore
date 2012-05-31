@@ -6,3 +6,5 @@ fvupdateconfig.h
 
 # Qt
 *.pro.user
+*.qm
+Sample-build-*

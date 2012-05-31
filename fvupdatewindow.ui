@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_6">
    <item>
-    <widget class="QGraphicsView" name="graphicsView">
+    <widget class="QGraphicsView" name="appIconGraphicsView">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -42,7 +42,7 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="newVersionIsAvailableLabel">
        <property name="font">
         <font>
          <weight>75</weight>
@@ -50,14 +50,14 @@
         </font>
        </property>
        <property name="text">
-        <string>A new version of %s is available!</string>
+        <string>A new version of %1 is available!</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="wouldYouLikeToDownloadLabel">
        <property name="text">
-        <string>%s %s is now available - you have %s. Would you like to download it now?</string>
+        <string>%1 %2 is now available - you have %3. Would you like to download it now?</string>
        </property>
       </widget>
      </item>
@@ -74,7 +74,7 @@
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_7">
         <item>
-         <widget class="QWebView" name="webView">
+         <widget class="QWebView" name="releaseNotesWebView">
           <property name="url">
            <url>
             <string>about:blank</string>
@@ -88,7 +88,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="skipThisVersionButton">
          <property name="text">
           <string>Skip This Version</string>
          </property>
@@ -97,14 +97,14 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="remindMeLaterButton">
            <property name="text">
             <string>Remind Me Later</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_3">
+          <widget class="QPushButton" name="installUpdateButton">
            <property name="text">
             <string>Install Update</string>
            </property>

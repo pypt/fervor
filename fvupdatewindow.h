@@ -14,9 +14,12 @@ class FvUpdateWindow : public QWidget
 public:
 	explicit FvUpdateWindow(QWidget *parent = 0);
 	~FvUpdateWindow();
-	
+
 private:
-	Ui::FvUpdateWindow *ui;
+	Ui::FvUpdateWindow*	m_ui;
+
+	// Helpers
+	void installTranslator();
 };
 
 #endif // FVUPDATEWINDOW_H

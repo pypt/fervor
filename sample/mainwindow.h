@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-class FvUpdateWindow;
 
 
 namespace Ui {
@@ -19,7 +18,6 @@ public:
 	
 private:
 	Ui::MainWindow *ui;
-	FvUpdateWindow* updateWindow;
 };
 
 #endif // MAINWINDOW_H
