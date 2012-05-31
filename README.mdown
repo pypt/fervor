@@ -1,0 +1,1 @@
+Fervor is (will / should be) a simple, multiplatform (Qt-based) application autoupdater, "inspired" by [Sparkle](http://sparkle.andymatuschak.org/).
