@@ -1,11 +1,11 @@
 #include "fvupdatewindow.h"
 #include "ui_fvupdatewindow.h"
-#include <QTranslator>
-#include <QTextCodec>
+#include "fvupdater.h"
+#include "fvavailableupdate.h"
 #include <QApplication>
-#include <QLibraryInfo>
 #include <QIcon>
 #include <QGraphicsScene>
+#include <QDebug>
 
 
 FvUpdateWindow::FvUpdateWindow(QWidget *parent) :
@@ -14,44 +14,46 @@ FvUpdateWindow::FvUpdateWindow(QWidget *parent) :
 {
 	m_ui->setupUi(this);
 
-	// Initialize translation
-	installTranslator();
+	// Delete on close
+	setAttribute(Qt::WA_DeleteOnClose, true);
 
 	// Set application icon
 	QIcon appIcon = QApplication::windowIcon();
 	QGraphicsScene appIconScene;
 	appIconScene.addPixmap(appIcon.pixmap(m_ui->appIconGraphicsView->size()));
 
+	// Set the "new version is available" string
 	QString newVersString = m_ui->newVersionIsAvailableLabel->text().arg(QApplication::applicationName());
 	m_ui->newVersionIsAvailableLabel->setText(newVersString);
+
+	// Connect buttons
+	connect(m_ui->installUpdateButton, SIGNAL(clicked()),
+			FvUpdater::sharedUpdater(), SLOT(InstallUpdate()));
+	connect(m_ui->skipThisVersionButton, SIGNAL(clicked()),
+			FvUpdater::sharedUpdater(), SLOT(SkipUpdate()));
+	connect(m_ui->remindMeLaterButton, SIGNAL(clicked()),
+			FvUpdater::sharedUpdater(), SLOT(RemindMeLater()));
 }
 
 FvUpdateWindow::~FvUpdateWindow()
 {
+	m_ui->releaseNotesWebView->stop();
 	delete m_ui;
 }
 
-void FvUpdateWindow::SetSuggestedApplicationVersion(QString suggestedApplicationVersion)
+bool FvUpdateWindow::UpdateWindowWithCurrentProposedUpdate()
 {
-	m_suggestedApplicationVersion = suggestedApplicationVersion;
+	FvAvailableUpdate* proposedUpdate = FvUpdater::sharedUpdater()->GetProposedUpdate();
+	if (! proposedUpdate) {
+		return false;
+	}
 
-	QString downloadString = m_ui->wouldYouLikeToDownloadLabel->text().arg(QApplication::applicationName(), suggestedApplicationVersion, QApplication::applicationVersion());
+	QString downloadString = m_ui->wouldYouLikeToDownloadLabel->text()
+			.arg(QApplication::applicationName(), proposedUpdate->GetEnclosureVersion(), QApplication::applicationVersion());
 	m_ui->wouldYouLikeToDownloadLabel->setText(downloadString);
-}
-
-void FvUpdateWindow::SetReleaseNotesURL(QString releaseNotesUrl)
-{
-	m_releaseNotesUrl = QUrl(releaseNotesUrl);
 
 	m_ui->releaseNotesWebView->stop();
-	m_ui->releaseNotesWebView->load(m_releaseNotesUrl);
-}
+	m_ui->releaseNotesWebView->load(proposedUpdate->GetReleaseNotesLink());
 
-void FvUpdateWindow::installTranslator()
-{
-	QTranslator translator;
-	QString locale = QLocale::system().name();
-	translator.load(QString("fervor_") + locale);
-	QTextCodec::setCodecForTr(QTextCodec::codecForName("utf8"));
-	qApp->installTranslator(&translator);
+	return true;
 }

@@ -14,7 +14,10 @@ class FvUpdateConfirmDialog : public QDialog
 public:
 	explicit FvUpdateConfirmDialog(QWidget *parent = 0);
 	~FvUpdateConfirmDialog();
-	
+
+	// Update the current update proposal from FvUpdater
+	bool UpdateWindowWithCurrentProposedUpdate();
+
 private:
 	Ui::FvUpdateConfirmDialog* m_ui;
 };

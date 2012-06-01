@@ -15,7 +15,6 @@ HEADERS += tests/fvversioncomparatortest.h
 
 
 
-
 DEPENDPATH += "$$PWD"
 INCLUDEPATH += "$$PWD"
 
@@ -23,15 +22,20 @@ SOURCES += fvupdatewindow.cpp \
 	fvupdater.cpp \
 	fvversioncomparator.cpp \
 	fvplatform.cpp \
-	fvignoredversions.cpp
+	fvignoredversions.cpp \
+	fvavailableupdate.cpp \
+	fvupdateconfirmdialog.cpp
 
 HEADERS += fvupdatewindow.h \
 	fvupdater.h \
 	fvversioncomparator.h \
 	fvplatform.h \
-	fvignoredversions.h
+	fvignoredversions.h \
+	fvavailableupdate.h \
+	fvupdateconfirmdialog.h
 
-FORMS += fvupdatewindow.ui
+FORMS += fvupdatewindow.ui \
+	fvupdateconfirmdialog.ui
 
 TRANSLATIONS += fervor_lt.ts
 CODECFORTR = UTF-8

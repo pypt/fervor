@@ -1,10 +1,13 @@
 #include "fvupdater.h"
 #include "fvupdatewindow.h"
+#include "fvupdateconfirmdialog.h"
 #include "fvplatform.h"
 #include "fvignoredversions.h"
+#include "fvavailableupdate.h"
 #include <QApplication>
 #include <QtNetwork>
 #include <QMessageBox>
+#include <QDesktopServices>
 #include <QDebug>
 
 #ifndef FV_APP_NAME
@@ -16,8 +19,8 @@
 
 
 #ifdef FV_DEBUG
-// Unit tests
-#include "fvversioncomparatortest.h"
+	// Unit tests
+#	include "fvversioncomparatortest.h"
 #endif
 
 
@@ -52,6 +55,11 @@ void FvUpdater::drop()
 FvUpdater::FvUpdater() : QObject(0)
 {
 	m_updaterWindow = 0;
+	m_updateConfirmationDialog = 0;
+	m_proposedUpdate = 0;
+
+	// Translation mechanism
+	installTranslator();
 
 #ifdef FV_DEBUG
 	// Unit tests
@@ -64,15 +72,69 @@ FvUpdater::FvUpdater() : QObject(0)
 
 FvUpdater::~FvUpdater()
 {
-	destroyUpdaterWindow();
+	if (m_proposedUpdate) {
+		delete m_proposedUpdate;
+		m_proposedUpdate = 0;
+	}
+
+	hideUpdateConfirmationDialog();
+	hideUpdaterWindow();
 }
 
-void FvUpdater::destroyUpdaterWindow()
+void FvUpdater::installTranslator()
+{
+	QTranslator translator;
+	QString locale = QLocale::system().name();
+	translator.load(QString("fervor_") + locale);
+	QTextCodec::setCodecForTr(QTextCodec::codecForName("utf8"));
+	qApp->installTranslator(&translator);
+}
+
+void FvUpdater::showUpdaterWindowUpdatedWithCurrentUpdateProposal()
+{
+	// Destroy window if already exists
+	hideUpdaterWindow();
+
+	// Create a new window
+	m_updaterWindow = new FvUpdateWindow();
+	m_updaterWindow->UpdateWindowWithCurrentProposedUpdate();
+	m_updaterWindow->show();
+}
+
+void FvUpdater::hideUpdaterWindow()
 {
 	if (m_updaterWindow) {
-		m_updaterWindow->hide();
-		delete m_updaterWindow;
+		if (! m_updaterWindow->close()) {
+			qWarning() << "Update window didn't close, leaking memory from now on";
+		}
+
+		// not deleting because of Qt::WA_DeleteOnClose
+
 		m_updaterWindow = 0;
+	}
+}
+
+void FvUpdater::showUpdateConfirmationDialogUpdatedWithCurrentUpdateProposal()
+{
+	// Destroy dialog if already exists
+	hideUpdateConfirmationDialog();
+
+	// Create a new window
+	m_updateConfirmationDialog = new FvUpdateConfirmDialog();
+	m_updateConfirmationDialog->UpdateWindowWithCurrentProposedUpdate();
+	m_updateConfirmationDialog->show();
+}
+
+void FvUpdater::hideUpdateConfirmationDialog()
+{
+	if (m_updateConfirmationDialog) {
+		if (! m_updateConfirmationDialog->close()) {
+			qWarning() << "Update confirmation dialog didn't close, leaking memory from now on";
+		}
+
+		// not deleting because of Qt::WA_DeleteOnClose
+
+		m_updateConfirmationDialog = 0;
 	}
 }
 
@@ -85,6 +147,72 @@ void FvUpdater::SetFeedURL(QString feedURL)
 QString FvUpdater::GetFeedURL()
 {
 	return m_feedURL.toString();
+}
+
+FvAvailableUpdate* FvUpdater::GetProposedUpdate()
+{
+	return m_proposedUpdate;
+}
+
+
+void FvUpdater::InstallUpdate()
+{
+	qDebug() << "Install update";
+
+	showUpdateConfirmationDialogUpdatedWithCurrentUpdateProposal();
+}
+
+void FvUpdater::SkipUpdate()
+{
+	qDebug() << "Skip update";
+
+	FvAvailableUpdate* proposedUpdate = GetProposedUpdate();
+	if (! proposedUpdate) {
+		qWarning() << "Proposed update is NULL (shouldn't be at this point)";
+		return;
+	}
+
+	// Start ignoring this particular version
+	FVIgnoredVersions::IgnoreVersion(proposedUpdate->GetEnclosureVersion());
+
+	hideUpdaterWindow();
+	hideUpdateConfirmationDialog();	// if any; shouldn't be shown at this point, but who knows
+}
+
+void FvUpdater::RemindMeLater()
+{
+	qDebug() << "Remind me later";
+
+	hideUpdaterWindow();
+	hideUpdateConfirmationDialog();	// if any; shouldn't be shown at this point, but who knows
+}
+
+void FvUpdater::UpdateInstallationConfirmed()
+{
+	qDebug() << "Confirm update installation";
+
+	FvAvailableUpdate* proposedUpdate = GetProposedUpdate();
+	if (! proposedUpdate) {
+		qWarning() << "Proposed update is NULL (shouldn't be at this point)";
+		return;
+	}
+
+	// Open a link
+	if (! QDesktopServices::openUrl(proposedUpdate->GetEnclosureUrl())) {
+		showErrorDialog("Unable to open this link in a browser. Please do it manually.");
+		return;
+	}
+
+	hideUpdaterWindow();
+	hideUpdateConfirmationDialog();
+}
+
+void FvUpdater::UpdateInstallationNotConfirmed()
+{
+	qDebug() << "Do not confirm update installation";
+
+	hideUpdateConfirmationDialog();	// if any; shouldn't be shown at this point, but who knows
+	// leave the "update proposal window" inact
 }
 
 
@@ -155,12 +283,12 @@ void FvUpdater::httpFeedReadyRead()
 void FvUpdater::httpFeedUpdateDataReadProgress(qint64 bytesRead,
 											   qint64 totalBytes)
 {
+	Q_UNUSED(bytesRead);
+	Q_UNUSED(totalBytes);
+
 	if (m_httpRequestAborted) {
 		return;
 	}
-
-	Q_UNUSED(bytesRead);
-	Q_UNUSED(totalBytes);
 }
 
 void FvUpdater::httpFeedDownloadFinished()
@@ -188,7 +316,7 @@ void FvUpdater::httpFeedDownloadFinished()
 	} else {
 
 		// Done.
-		parseFeedXML();
+		xmlParseFeed();
 
 	}
 
@@ -196,7 +324,7 @@ void FvUpdater::httpFeedDownloadFinished()
 	m_reply = 0;
 }
 
-bool FvUpdater::parseFeedXML()
+bool FvUpdater::xmlParseFeed()
 {
 	QString currentTag, currentQualifiedTag;
 
@@ -231,22 +359,22 @@ bool FvUpdater::parseFeedXML()
 				QXmlStreamAttributes attribs = m_xml.attributes();
 
 				if (attribs.hasAttribute("fervor:platform")) {
-					xmlEnclosurePlatform = attribs.value("fervor:platform").toString();
+					xmlEnclosurePlatform = attribs.value("fervor:platform").toString().trimmed();
 
 					if (FvPlatform::CurrentlyRunningOnPlatform(xmlEnclosurePlatform)) {
 
 						if (attribs.hasAttribute("url")) {
-							xmlEnclosureUrl = attribs.value("url").toString();
+							xmlEnclosureUrl = attribs.value("url").toString().trimmed();
 						} else {
 							xmlEnclosureUrl = "";
 						}
 						if (attribs.hasAttribute("fervor:version")) {
-							xmlEnclosureVersion = attribs.value("fervor:version").toString();
+							xmlEnclosureVersion = attribs.value("fervor:version").toString().trimmed();
 						} else {
 							xmlEnclosureVersion = "";
 						}
 						if (attribs.hasAttribute("sparkle:version")) {
-							xmlEnclosureVersion = attribs.value("sparkle:version").toString();
+							xmlEnclosureVersion = attribs.value("sparkle:version").toString().trimmed();
 						} else {
 							xmlEnclosureVersion = "";
 						}
@@ -256,7 +384,7 @@ bool FvUpdater::parseFeedXML()
 							xmlEnclosureLength = 0;
 						}
 						if (attribs.hasAttribute("type")) {
-							xmlEnclosureType = attribs.value("type").toString();
+							xmlEnclosureType = attribs.value("type").toString().trimmed();
 						} else {
 							xmlEnclosureType = "";
 						}
@@ -275,7 +403,6 @@ bool FvUpdater::parseFeedXML()
 				// here (because the topmost is the most recent one, and thus
 				// the newest version.
 
-
 				return searchDownloadedFeedForUpdates(xmlTitle,
 													  xmlLink,
 													  xmlReleaseNotesLink,
@@ -291,16 +418,16 @@ bool FvUpdater::parseFeedXML()
 		} else if (m_xml.isCharacters() && ! m_xml.isWhitespace()) {
 
 			if (currentTag == "title") {
-				xmlTitle += m_xml.text().toString();
+				xmlTitle += m_xml.text().toString().trimmed();
 
 			} else if (currentTag == "link") {
-				xmlLink += m_xml.text().toString();
+				xmlLink += m_xml.text().toString().trimmed();
 
 			} else if (currentQualifiedTag == "sparkle:releaseNotesLink") {
-				xmlReleaseNotesLink += m_xml.text().toString();
+				xmlReleaseNotesLink += m_xml.text().toString().trimmed();
 
 			} else if (currentTag == "pubDate") {
-				xmlPubDate += m_xml.text().toString();
+				xmlPubDate += m_xml.text().toString().trimmed();
 
 			}
 
@@ -328,6 +455,11 @@ bool FvUpdater::searchDownloadedFeedForUpdates(QString xmlTitle,
 											   unsigned long xmlEnclosureLength,
 											   QString xmlEnclosureType)
 {
+	Q_UNUSED(xmlTitle);
+	Q_UNUSED(xmlPubDate);
+	Q_UNUSED(xmlEnclosureLength);
+	Q_UNUSED(xmlEnclosureType);
+
 	// Validate
 	if (xmlReleaseNotesLink.isEmpty()) {
 		if (xmlLink.isEmpty()) {
@@ -361,37 +493,27 @@ bool FvUpdater::searchDownloadedFeedForUpdates(QString xmlTitle,
 		return true;	// Things have succeeded when you think of it.
 	}
 
-	// Success!
 
-	// Destroy window if already exists
-	destroyUpdaterWindow();
+	//
+	// Success! At this point, we have found an update that can be proposed
+	// to the user.
+	//
 
-	m_updaterWindow = new FvUpdateWindow();
-	m_updaterWindow->SetSuggestedApplicationVersion(xmlEnclosureVersion);
-	m_updaterWindow->SetReleaseNotesURL(xmlLink);
-	m_updaterWindow->show();
+	if (m_proposedUpdate) {
+		delete m_proposedUpdate; m_proposedUpdate = 0;
+	}
+	m_proposedUpdate = new FvAvailableUpdate();
+	m_proposedUpdate->SetTitle(xmlTitle);
+	m_proposedUpdate->SetReleaseNotesLink(xmlReleaseNotesLink);
+	m_proposedUpdate->SetPubDate(xmlPubDate);
+	m_proposedUpdate->SetEnclosureUrl(xmlEnclosureUrl);
+	m_proposedUpdate->SetEnclosureVersion(xmlEnclosureVersion);
+	m_proposedUpdate->SetEnclosurePlatform(xmlEnclosurePlatform);
+	m_proposedUpdate->SetEnclosureLength(xmlEnclosureLength);
+	m_proposedUpdate->SetEnclosureType(xmlEnclosureType);
 
-	/*
-	showErrorDialog(QString("Done!\n\n"
-							"xmlTitle = %1\n"
-							"xmlLink = %2\n"
-							"xmlReleaseNotesLink = %3\n"
-							"xmlPubDate = %4\n"
-							"xmlEnclosureUrl = %5\n"
-							"xmlEnclosureVersion = %6\n"
-							"xmlEnclosurePlatform = %7\n"
-							"xmlEnclosureLength = %8\n"
-							"xmlEnclosureType = %9")
-					.arg(xmlTitle,
-						 xmlLink,
-						 xmlReleaseNotesLink,
-						 xmlPubDate,
-						 xmlEnclosureUrl,
-						 xmlEnclosureVersion,
-						 xmlEnclosurePlatform,
-						 QString::number(xmlEnclosureLength),
-						 xmlEnclosureType));
-	*/
+	// Show "look, there's an update" window
+	showUpdaterWindowUpdatedWithCurrentUpdateProposal();
 
 	return true;
 }
@@ -404,4 +526,13 @@ void FvUpdater::showErrorDialog(QString message)
 	dlFailedMsgBox.setText(tr("Error"));
 	dlFailedMsgBox.setInformativeText(message);
 	dlFailedMsgBox.exec();
+}
+
+void FvUpdater::showInformationDialog(QString message)
+{
+	QMessageBox dlInformationMsgBox;
+	dlInformationMsgBox.setIcon(QMessageBox::Information);
+	dlInformationMsgBox.setText(tr("Information"));
+	dlInformationMsgBox.setInformativeText(message);
+	dlInformationMsgBox.exec();
 }

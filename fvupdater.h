@@ -7,6 +7,8 @@
 #include <QUrl>
 #include <QXmlStreamReader>
 class FvUpdateWindow;
+class FvUpdateConfirmDialog;
+class FvAvailableUpdate;
 
 
 class FvUpdater : public QObject
@@ -18,49 +20,107 @@ public:
 	// Singleton
 	static FvUpdater* sharedUpdater();
 	static void drop();
-	
-public slots:
 
 	// Set feed URL
 	void SetFeedURL(QString feedURL);
 	QString GetFeedURL();
+	
+public slots:
 
 	// Check for updates
 	bool CheckForUpdates(bool notifyAboutUpToDateApplication = false);
 
+
+	//
+	// ---------------------------------------------------
+	// ---------------------------------------------------
+	// ---------------------------------------------------
+	// ---------------------------------------------------
+	//
+
+protected:
+
+	friend class FvUpdateWindow;		// Uses GetProposedUpdate()
+	friend class FvUpdateConfirmDialog;	// Uses GetProposedUpdate()
+	FvAvailableUpdate* GetProposedUpdate();
+
+
+protected slots:
+
+	// Update window button slots
+	void InstallUpdate();
+	void SkipUpdate();
+	void RemindMeLater();
+
+	// Update confirmation dialog button slots
+	void UpdateInstallationConfirmed();
+	void UpdateInstallationNotConfirmed();
+
 private:
 
-	// Hide main constructor
-	FvUpdater();
-	~FvUpdater();
+	//
+	// Singleton business
+	//
+	// (we leave just the declarations, so the compiler will warn us if we try
+	//  to use those two functions by accident)
+	FvUpdater();							// Hide main constructor
+	~FvUpdater();							// Hide main destructor
+	FvUpdater(const FvUpdater&);			// Hide copy constructor
+	FvUpdater& operator=(const FvUpdater&);	// Hide assign op
 
-	// Hide copy constructor
-	FvUpdater(const FvUpdater&);
+	static FvUpdater* m_Instance;			// Singleton instance
 
-	// Hide assign op
-	// we leave just the declarations, so the compiler will warn us
-	// if we try to use those two functions by accident
-	FvUpdater& operator=(const FvUpdater&);
 
-	// Singleton instance
-	static FvUpdater* m_Instance;
+	//
+	// Windows / dialogs
+	//
+	FvUpdateWindow* m_updaterWindow;										// Updater window (NULL if not shown)
+	void showUpdaterWindowUpdatedWithCurrentUpdateProposal();				// Show updater window
+	void hideUpdaterWindow();												// Hide + destroy m_updaterWindow
 
-	// Updater window
-	FvUpdateWindow* m_updaterWindow;
+	FvUpdateConfirmDialog* m_updateConfirmationDialog;						// Update confirmation dialog (NULL if not shown)
+	void showUpdateConfirmationDialogUpdatedWithCurrentUpdateProposal();	// Show update confirmation dialog
+	void hideUpdateConfirmationDialog();									// Hide + destroy m_updateConfirmationDialog
 
-	// HTTP fetcher
-	QUrl m_feedURL;
+	// Available update (NULL if not fetched)
+	FvAvailableUpdate* m_proposedUpdate;
+
+	// "No updates" dialog was requested and should be shown even if no update was found
+	// (notifyAboutUpToDateApplication from CheckForUpdates() goes here)
+	bool m_showDialogEvenIfNoUpdatesWereFound;
+
+	// Dialogs (notifications)
+	void showErrorDialog(QString message);			// Show an error message
+	void showInformationDialog(QString message);	// Show an informational message
+
+
+	//
+	// HTTP feed fetcher infrastructure
+	//
+	QUrl m_feedURL;					// Feed URL that is currently being fetched
 	QNetworkAccessManager m_qnam;
 	QNetworkReply* m_reply;
 	int m_httpGetId;
 	bool m_httpRequestAborted;
 
-	void startDownloadFeed(QUrl url);
-	void cancelDownloadFeed();
+	void startDownloadFeed(QUrl url);	// Start downloading feed
+	void cancelDownloadFeed();			// Stop downloading the current feed
 
+private slots:
+
+	void httpFeedReadyRead();
+	void httpFeedUpdateDataReadProgress(qint64 bytesRead,
+										qint64 totalBytes);
+	void httpFeedDownloadFinished();
+
+
+private:
+
+	//
 	// XML parser
-	QXmlStreamReader m_xml;
-	bool parseFeedXML();
+	//
+	QXmlStreamReader m_xml;				// XML data collector and parser
+	bool xmlParseFeed();				// Parse feed in m_xml
 	bool searchDownloadedFeedForUpdates(QString xmlTitle,
 										QString xmlLink,
 										QString xmlReleaseNotesLink,
@@ -71,21 +131,11 @@ private:
 										unsigned long xmlEnclosureLength,
 										QString xmlEnclosureType);
 
-	// "No updates" dialog was requested
-	bool m_showDialogEvenIfNoUpdatesWereFound;
 
-	void destroyUpdaterWindow();
-
-	// Show an error message
-	void showErrorDialog(QString message);
-
-
-private slots:
-
-	void httpFeedReadyRead();
-	void httpFeedUpdateDataReadProgress(qint64 bytesRead,
-										qint64 totalBytes);
-	void httpFeedDownloadFinished();
+	//
+	// Helpers
+	//
+	void installTranslator();			// Initialize translation mechanism
 
 };
 
