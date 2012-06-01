@@ -8,7 +8,7 @@
 
 	<channel>
 		<title>Your Great App's Changelog</title>
-		<link>http://you.com/app/appcast.xml</link>
+		<link>https://raw.github.com/pypt/fervor/master/sample/Appcast.xml</link>
 		<description>Most recent changes with links to updates.</description>
 		<language>en</language>
 		<atom:link href="https://raw.github.com/pypt/fervor/master/sample/Appcast.xml" rel="self" type="application/rss+xml" />
@@ -16,11 +16,11 @@
 		<item>
 			<title>Version 2.0 (2 bugs fixed; 3 new features)</title>
 			<pubDate>Mon, 09 Jan 2006 19:20:11 +0000</pubDate>
-			<guid isPermaLink="true">http://fervor.github.com/RelNotes.html#v2.0</guid>
+			<guid isPermaLink="true">http://pypt.github.com/fervor/RelNotes.html#v2.0</guid>
 
 			<!-- One of those (<link> is preferred by Fervor, <sparkle:releaseNotesLink> is used by Sparkle) -->
-			<link>http://fervor.github.com/RelNotes.html#v2.0</link> <!-- or -->
-			<sparkle:releaseNotesLink>http://fervor.github.com/RelNotes.html#v2.0</sparkle:releaseNotesLink>
+			<link>http://pypt.github.com/fervor/RelNotes.html#v2.0</link> <!-- or -->
+			<sparkle:releaseNotesLink>http://pypt.github.com/fervor/RelNotes.html#v2.0</sparkle:releaseNotesLink>
 
 			<!--
 				See QtGlobal's QT_OS_* constants for valid platform versions.
