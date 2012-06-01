@@ -3,6 +3,35 @@
 <TS version="2.0" language="lt_LT">
 <defaultcodec>UTF-8</defaultcodec>
 <context>
+    <name>FvUpdateConfirmDialog</name>
+    <message>
+        <location filename="fvupdateconfirmdialog.ui" line="14"/>
+        <source>Software Update</source>
+        <oldsource>Update</oldsource>
+        <translation>Programos atnaujinimas</translation>
+    </message>
+    <message>
+        <location filename="fvupdateconfirmdialog.ui" line="20"/>
+        <source>The update file is located at:</source>
+        <translation>Bylą programos atnaujinimui galima atsisiųsti adresu:</translation>
+    </message>
+    <message>
+        <location filename="fvupdateconfirmdialog.ui" line="27"/>
+        <source>&lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="fvupdateconfirmdialog.ui" line="40"/>
+        <source>Download this update, close &quot;%1&quot;, install it, and then reopen &quot;%1&quot;.</source>
+        <translation>Atsisiųskite bylą, išjunkite „%1“, įdiekite atnaujinimą ir iš naujo paleiskite „%1“. </translation>
+    </message>
+    <message>
+        <location filename="fvupdateconfirmdialog.ui" line="47"/>
+        <source>When you click &quot;OK&quot;, this link will be opened in your browser.</source>
+        <translation>Jei paspauskite „Gerai“, atnaujinimo nuoroda atsidarys Jūsų naršyklėje.</translation>
+    </message>
+</context>
+<context>
     <name>FvUpdateWindow</name>
     <message>
         <location filename="fvupdatewindow.ui" line="14"/>
@@ -45,6 +74,34 @@
         <location filename="fvupdatewindow.ui" line="109"/>
         <source>Install Update</source>
         <translation>Įdiegti atnaujinimą</translation>
+    </message>
+</context>
+<context>
+    <name>FvUpdater</name>
+    <message>
+        <location filename="fvupdater.cpp" line="305"/>
+        <source>Feed download failed: %1.</source>
+        <translation>Nepavyko atsiųsti informacijos apie atnaujinimus: %1.</translation>
+    </message>
+    <message>
+        <location filename="fvupdater.cpp" line="438"/>
+        <source>Feed parsing failed: %1 %2.</source>
+        <translation>Nepavyko suprasti informacijos apie atnaujinimus: %1 %2.</translation>
+    </message>
+    <message>
+        <location filename="fvupdater.cpp" line="489"/>
+        <source>No updates were found.</source>
+        <translation>Programos atnaujinimų nėra.</translation>
+    </message>
+    <message>
+        <location filename="fvupdater.cpp" line="526"/>
+        <source>Error</source>
+        <translation>Klaida</translation>
+    </message>
+    <message>
+        <location filename="fvupdater.cpp" line="535"/>
+        <source>Information</source>
+        <translation>Informacija</translation>
     </message>
 </context>
 </TS>
