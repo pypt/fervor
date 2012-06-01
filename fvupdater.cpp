@@ -138,10 +138,14 @@ void FvUpdater::hideUpdateConfirmationDialog()
 	}
 }
 
+void FvUpdater::SetFeedURL(QUrl feedURL)
+{
+	m_feedURL = feedURL;
+}
 
 void FvUpdater::SetFeedURL(QString feedURL)
 {
-	m_feedURL = QUrl(feedURL);
+	SetFeedURL(QUrl(feedURL));
 }
 
 QString FvUpdater::GetFeedURL()

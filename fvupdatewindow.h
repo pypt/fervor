@@ -2,6 +2,7 @@
 #define FVUPDATEWINDOW_H
 
 #include <QWidget>
+class QGraphicsScene;
 
 namespace Ui {
 class FvUpdateWindow;
@@ -20,6 +21,7 @@ public:
 
 private:
 	Ui::FvUpdateWindow*	m_ui;
+	QGraphicsScene* m_appIconScene;
 
 };
 

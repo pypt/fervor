@@ -6,39 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>615</width>
-    <height>329</height>
+    <width>640</width>
+    <height>320</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Software Update</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_6">
-   <item>
-    <widget class="QGraphicsView" name="appIconGraphicsView">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>80</width>
-       <height>80</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>80</width>
-       <height>80</height>
-      </size>
-     </property>
-     <property name="interactive">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>

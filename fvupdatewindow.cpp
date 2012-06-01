@@ -3,8 +3,6 @@
 #include "fvupdater.h"
 #include "fvavailableupdate.h"
 #include <QApplication>
-#include <QIcon>
-#include <QGraphicsScene>
 #include <QDebug>
 
 
@@ -14,13 +12,10 @@ FvUpdateWindow::FvUpdateWindow(QWidget *parent) :
 {
 	m_ui->setupUi(this);
 
+	m_appIconScene = 0;
+
 	// Delete on close
 	setAttribute(Qt::WA_DeleteOnClose, true);
-
-	// Set application icon
-	QIcon appIcon = QApplication::windowIcon();
-	QGraphicsScene appIconScene;
-	appIconScene.addPixmap(appIcon.pixmap(m_ui->appIconGraphicsView->size()));
 
 	// Set the "new version is available" string
 	QString newVersString = m_ui->newVersionIsAvailableLabel->text().arg(QApplication::applicationName());

@@ -21,7 +21,8 @@ public:
 	static FvUpdater* sharedUpdater();
 	static void drop();
 
-	// Set feed URL
+	// Set / get feed URL
+	void SetFeedURL(QUrl feedURL);
 	void SetFeedURL(QString feedURL);
 	QString GetFeedURL();
 	
@@ -97,7 +98,7 @@ private:
 	//
 	// HTTP feed fetcher infrastructure
 	//
-	QUrl m_feedURL;					// Feed URL that is currently being fetched
+	QUrl m_feedURL;					// Feed URL that will be fetched
 	QNetworkAccessManager m_qnam;
 	QNetworkReply* m_reply;
 	int m_httpGetId;
