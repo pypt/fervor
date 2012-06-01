@@ -9,6 +9,7 @@ class FVIgnoredVersions : public QObject
 
 public:
 	static bool VersionIsIgnored(QString version);
+	static void IgnoreVersion(QString version);
 	
 private:
 	explicit FVIgnoredVersions(QObject *parent = 0);

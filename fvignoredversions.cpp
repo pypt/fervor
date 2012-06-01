@@ -44,3 +44,20 @@ bool FVIgnoredVersions::VersionIsIgnored(QString version)
 	// Fallback - skip
 	return true;
 }
+
+void FVIgnoredVersions::IgnoreVersion(QString version)
+{
+	if (version == FV_APP_VERSION) {
+		// Don't ignore the current version
+		return;
+	}
+
+	if (version.isEmpty()) {
+		return;
+	}
+
+	QSettings settings;
+	settings.setValue(FV_IGNORED_VERSIONS_LATEST_SKIPPED_VERSION_KEY, version);
+
+	return;
+}
