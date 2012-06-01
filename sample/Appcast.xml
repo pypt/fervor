@@ -19,8 +19,8 @@
 			<guid isPermaLink="true">http://you.com/app/2.0.html</guid>
 
 			<!-- One of those (<link> is preferred by Fervor, <sparkle:releaseNotesLink> is used by Sparkle) -->
-			<link>http://you.com/app/2.0.html</link> <!-- or -->
-			<sparkle:releaseNotesLink>http://you.com/app/2.0.html</sparkle:releaseNotesLink>
+			<link>https://raw.github.com/pypt/fervor/master/sample/RelNotes.html#v2.0</link> <!-- or -->
+			<sparkle:releaseNotesLink>https://raw.github.com/pypt/fervor/master/sample/RelNotes.html#v2.0</sparkle:releaseNotesLink>
 
 			<!--
 				See QtGlobal's QT_OS_* constants for valid platform versions.

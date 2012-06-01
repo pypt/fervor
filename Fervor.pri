@@ -1,13 +1,18 @@
-QT += core gui webkit
+QT += core gui webkit network
 
 DEFINES += FV_APP_NAME=\\\"$$TARGET\\\"
 DEFINES += FV_APP_VERSION=\\\"$$VERSION\\\"
+
+
 
 # FIXME unit tests
 DEFINES += FV_DEBUG=1
 DEPENDPATH += "$$PWD/tests/"
 INCLUDEPATH += "$$PWD/tests/"
 CONFIG += qtestlib
+SOURCES += tests/fvversioncomparatortest.cpp
+HEADERS += tests/fvversioncomparatortest.h
+
 
 
 
@@ -17,13 +22,14 @@ INCLUDEPATH += "$$PWD"
 SOURCES += fvupdatewindow.cpp \
 	fvupdater.cpp \
 	fvversioncomparator.cpp \
-	tests/fvversioncomparatortest.cpp
+	fvplatform.cpp \
+	fvignoredversions.cpp
 
 HEADERS += fvupdatewindow.h \
-	fvupdateconfig.h \
 	fvupdater.h \
 	fvversioncomparator.h \
-	tests/fvversioncomparatortest.h
+	fvplatform.h \
+	fvignoredversions.h
 
 FORMS += fvupdatewindow.ui
 
