@@ -2,6 +2,7 @@
 #include "fvavailableupdate.h"
 #include "fvupdater.h"
 #include "ui_fvupdateconfirmdialog.h"
+#include <QCloseEvent>
 
 
 FvUpdateConfirmDialog::FvUpdateConfirmDialog(QWidget *parent) :
@@ -41,4 +42,10 @@ bool FvUpdateConfirmDialog::UpdateWindowWithCurrentProposedUpdate()
 	m_ui->updateFileLinkLabel->setText(downloadLinkString);
 
 	return true;
+}
+
+void FvUpdateConfirmDialog::closeEvent(QCloseEvent* event)
+{
+	FvUpdater::sharedUpdater()->updateConfirmationDialogWasClosed();
+	event->accept();
 }

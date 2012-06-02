@@ -19,6 +19,8 @@ public:
 	// Update the current update proposal from FvUpdater
 	bool UpdateWindowWithCurrentProposedUpdate();
 
+	void closeEvent(QCloseEvent* event);
+
 private:
 	Ui::FvUpdateWindow*	m_ui;
 	QGraphicsScene* m_appIconScene;

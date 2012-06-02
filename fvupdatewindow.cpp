@@ -3,6 +3,7 @@
 #include "fvupdater.h"
 #include "fvavailableupdate.h"
 #include <QApplication>
+#include <QCloseEvent>
 #include <QDebug>
 
 
@@ -51,4 +52,10 @@ bool FvUpdateWindow::UpdateWindowWithCurrentProposedUpdate()
 	m_ui->releaseNotesWebView->load(proposedUpdate->GetReleaseNotesLink());
 
 	return true;
+}
+
+void FvUpdateWindow::closeEvent(QCloseEvent* event)
+{
+	FvUpdater::sharedUpdater()->updaterWindowWasClosed();
+	event->accept();
 }
