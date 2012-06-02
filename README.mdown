@@ -1,1 +1,18 @@
-Fervor is (will / should be) a simple, multiplatform (Qt-based) application autoupdater, "inspired" by [Sparkle](http://sparkle.andymatuschak.org/).
+Fervor is a simple, multiplatform ([Qt](http://qt.nokia.com/)-based) application autoupdater, inspired by [Sparkle](http://sparkle.andymatuschak.org/).
+
+
+# Features
+
+* Multiplaform (works / should work on Windows, Mac OS X, Linux, ...).
+* Checks for updates both automatically and manually.
+* Displays release notes.
+* Updates might be skipped or installed later.
+* Backwards compatible with Sparkle (can use the very same appcast RSS).
+* BSD license.
+
+
+# Screenshots
+
+![](http://pypt.github.com/fervor/screenshot-1.png "Update is available")
+
+![](http://pypt.github.com/fervor/screenshot-2.png "Download the update")
