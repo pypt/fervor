@@ -6,12 +6,12 @@ DEFINES += FV_APP_VERSION=\\\"$$VERSION\\\"
 
 
 # FIXME unit tests
-DEFINES += FV_DEBUG=1
-DEPENDPATH += "$$PWD/tests/"
-INCLUDEPATH += "$$PWD/tests/"
-CONFIG += qtestlib
-SOURCES += tests/fvversioncomparatortest.cpp
-HEADERS += tests/fvversioncomparatortest.h
+#DEFINES += FV_DEBUG=1
+#DEPENDPATH += "$$PWD/tests/"
+#INCLUDEPATH += "$$PWD/tests/"
+#CONFIG += qtestlib
+#SOURCES += tests/fvversioncomparatortest.cpp
+#HEADERS += tests/fvversioncomparatortest.h
 
 
 
