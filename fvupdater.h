@@ -29,7 +29,11 @@ public:
 public slots:
 
 	// Check for updates
-	bool CheckForUpdates(bool notifyAboutUpToDateApplication = false);
+	bool CheckForUpdates(bool silentAsMuchAsItCouldGet = true);
+
+	// Aliases
+	bool CheckForUpdatesSilent();
+	bool CheckForUpdatesNotSilent();
 
 
 	//
@@ -41,8 +45,8 @@ public slots:
 
 protected:
 
-	friend class FvUpdateWindow;		// Uses GetProposedUpdate()
-	friend class FvUpdateConfirmDialog;	// Uses GetProposedUpdate()
+	friend class FvUpdateWindow;		// Uses GetProposedUpdate() and others
+	friend class FvUpdateConfirmDialog;	// Uses GetProposedUpdate() and others
 	FvAvailableUpdate* GetProposedUpdate();
 
 
@@ -75,24 +79,27 @@ private:
 	//
 	// Windows / dialogs
 	//
-	FvUpdateWindow* m_updaterWindow;										// Updater window (NULL if not shown)
-	void showUpdaterWindowUpdatedWithCurrentUpdateProposal();				// Show updater window
-	void hideUpdaterWindow();												// Hide + destroy m_updaterWindow
+	FvUpdateWindow* m_updaterWindow;								// Updater window (NULL if not shown)
+	void showUpdaterWindowUpdatedWithCurrentUpdateProposal();		// Show updater window
+	void hideUpdaterWindow();										// Hide + destroy m_updaterWindow
+	void updaterWindowWasClosed();									// Sent by the updater window when it gets closed
 
 	FvUpdateConfirmDialog* m_updateConfirmationDialog;						// Update confirmation dialog (NULL if not shown)
 	void showUpdateConfirmationDialogUpdatedWithCurrentUpdateProposal();	// Show update confirmation dialog
 	void hideUpdateConfirmationDialog();									// Hide + destroy m_updateConfirmationDialog
+	void updateConfirmationDialogWasClosed();								// Sent by the update confirmation dialog when it gets closed
 
 	// Available update (NULL if not fetched)
 	FvAvailableUpdate* m_proposedUpdate;
 
-	// "No updates" dialog was requested and should be shown even if no update was found
-	// (notifyAboutUpToDateApplication from CheckForUpdates() goes here)
-	bool m_showDialogEvenIfNoUpdatesWereFound;
+	// If true, don't show the error dialogs and the "no updates." dialog
+	// (silentAsMuchAsItCouldGet from CheckForUpdates() goes here)
+	// Useful for automatic update checking upon application startup.
+	bool m_silentAsMuchAsItCouldGet;
 
 	// Dialogs (notifications)
-	void showErrorDialog(QString message);			// Show an error message
-	void showInformationDialog(QString message);	// Show an informational message
+	void showErrorDialog(QString message, bool showEvenInSilentMode = false);			// Show an error message
+	void showInformationDialog(QString message, bool showEvenInSilentMode = false);		// Show an informational message
 
 
 	//

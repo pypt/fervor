@@ -10,11 +10,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	// Set feed URL before doing anything else
-	FvUpdater::sharedUpdater()->SetFeedURL("https://raw.github.com/pypt/fervor/master/sample/Appcast.xml");
-
 	// Connect the "check for updates" button with the autoupdater
-	connect(ui->updateButton, SIGNAL(clicked()), FvUpdater::sharedUpdater(), SLOT(CheckForUpdates()));
+	connect(ui->updateButton, SIGNAL(clicked()),
+			FvUpdater::sharedUpdater(), SLOT(CheckForUpdatesNotSilent()));
 }
 
 MainWindow::~MainWindow()
