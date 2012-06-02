@@ -39,39 +39,39 @@
         <translation>Programos atnaujinimas</translation>
     </message>
     <message>
-        <location filename="fvupdatewindow.ui" line="53"/>
+        <location filename="fvupdatewindow.ui" line="28"/>
         <source>A new version of %1 is available!</source>
         <oldsource>A new version of %s is available!</oldsource>
         <translation>Išleista nauja programos „%1“ versija!</translation>
     </message>
     <message>
-        <location filename="fvupdatewindow.ui" line="60"/>
+        <location filename="fvupdatewindow.ui" line="35"/>
         <source>%1 %2 is now available - you have %3. Would you like to download it now?</source>
         <oldsource>%s %s is now available - you have %s. Would you like to download it now?</oldsource>
         <translation>Išleista programos „%1“ versija %2 - Jūs naudojate %3. Ar norėtumėte atnaujinti? </translation>
     </message>
     <message>
-        <location filename="fvupdatewindow.ui" line="73"/>
+        <location filename="fvupdatewindow.ui" line="48"/>
         <source>Release Notes:</source>
         <translation>Naujojo leidimo pastabos:</translation>
     </message>
     <message>
-        <location filename="fvupdatewindow.ui" line="80"/>
+        <location filename="fvupdatewindow.ui" line="61"/>
         <source>about:blank</source>
         <translation>about:blank</translation>
     </message>
     <message>
-        <location filename="fvupdatewindow.ui" line="93"/>
+        <location filename="fvupdatewindow.ui" line="74"/>
         <source>Skip This Version</source>
         <translation>Praleisti šią versiją</translation>
     </message>
     <message>
-        <location filename="fvupdatewindow.ui" line="102"/>
+        <location filename="fvupdatewindow.ui" line="94"/>
         <source>Remind Me Later</source>
         <translation>Priminti vėliau</translation>
     </message>
     <message>
-        <location filename="fvupdatewindow.ui" line="109"/>
+        <location filename="fvupdatewindow.ui" line="101"/>
         <source>Install Update</source>
         <translation>Įdiegti atnaujinimą</translation>
     </message>
@@ -79,27 +79,47 @@
 <context>
     <name>FvUpdater</name>
     <message>
-        <location filename="fvupdater.cpp" line="305"/>
+        <location filename="fvupdater.cpp" line="221"/>
+        <source>Unable to open this link in a browser. Please do it manually.</source>
+        <translation>Nepavyko atidaryti nuorodos naršyklėje. Bandykite nuorodą nukopijuoti ir atidaryti pats.</translation>
+    </message>
+    <message>
+        <location filename="fvupdater.cpp" line="338"/>
         <source>Feed download failed: %1.</source>
         <translation>Nepavyko atsiųsti informacijos apie atnaujinimus: %1.</translation>
     </message>
     <message>
-        <location filename="fvupdater.cpp" line="438"/>
+        <location filename="fvupdater.cpp" line="471"/>
         <source>Feed parsing failed: %1 %2.</source>
         <translation>Nepavyko suprasti informacijos apie atnaujinimus: %1 %2.</translation>
     </message>
     <message>
-        <location filename="fvupdater.cpp" line="489"/>
+        <location filename="fvupdater.cpp" line="499"/>
+        <source>Feed error: &quot;release notes&quot; link is empty</source>
+        <translation>Nepavyko rasti nuorodos į naujojo leidimo pastabas</translation>
+    </message>
+    <message>
+        <location filename="fvupdater.cpp" line="508"/>
+        <source>Feed error: invalid &quot;release notes&quot; link</source>
+        <translation>Nekorektiška nuoroda į naujojo leidimo pastabas</translation>
+    </message>
+    <message>
+        <location filename="fvupdater.cpp" line="512"/>
+        <source>Feed error: invalid &quot;enclosure&quot; with the download link</source>
+        <translation>Nepavyko rasti nuorodos į atnaujintos versijos bylą</translation>
+    </message>
+    <message>
+        <location filename="fvupdater.cpp" line="520"/>
         <source>No updates were found.</source>
         <translation>Programos atnaujinimų nėra.</translation>
     </message>
     <message>
-        <location filename="fvupdater.cpp" line="526"/>
+        <location filename="fvupdater.cpp" line="562"/>
         <source>Error</source>
         <translation>Klaida</translation>
     </message>
     <message>
-        <location filename="fvupdater.cpp" line="535"/>
+        <location filename="fvupdater.cpp" line="578"/>
         <source>Information</source>
         <translation>Informacija</translation>
     </message>
