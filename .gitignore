@@ -7,5 +7,4 @@ fvupdateconfig.h
 # Qt
 *.pro.user
 *.ui.autosave
-*.qm
 Sample-build-*
