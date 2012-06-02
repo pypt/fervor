@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	// Connect the "check for updates" button with the autoupdater
+	// Connect the "check for updates manually" button with the autoupdater
 	connect(ui->updateButton, SIGNAL(clicked()),
 			FvUpdater::sharedUpdater(), SLOT(CheckForUpdatesNotSilent()));
 }

@@ -19,12 +19,12 @@
      <widget class="QPushButton" name="updateButton">
       <property name="maximumSize">
        <size>
-        <width>200</width>
+        <width>240</width>
         <height>16777215</height>
        </size>
       </property>
       <property name="text">
-       <string>Check for updates</string>
+       <string>Check for updates manually</string>
       </property>
      </widget>
     </item>
