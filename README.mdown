@@ -1,3 +1,24 @@
+This is a branch that was made by Torben Dannhauer that promises an *autoupdate functionality* at least on Windows.
+
+According to the author, the following changes were made:
+
+* Clicking "Install Update" now installs the update automatically:
+	* downloads the update with a progress bar
+	* renames all old files with an available replacement to `<oldname>.oldversion`
+	* unzips the update files
+	* restarts the app to run the new software version – now the old binaries are no longer locked by Windows
+	* and finally during the start process of the software cleans up the renamed old files.
+	* (Windows does not allow to delete files of running apps, but renaming is allowed – thus restarting the app allows to switch to the new version and the final cleanup deletes the old files)
+* Fervor now depends on [QuaZIP](http://quazip.sourceforge.net/), a zipping framework for Qt to be able to unzip the update within the program without further _external_ dependencies like 7zip, WinRar or similar solutions.
+* Removed the dialog which presents the update for manual download – it is no longer required.
+* Removing the preprocessor definitions `FV_APP_VERSION` and `FV_APP_VERSION` – it is far more elegant to use the QApplication::set* mechanism instead the defined strings.
+* Integrate SSL-Certificate fingerprint check to ensure the update is downloaded from the right server.
+* Integrate support for Webserver-authentication do allow to protect the updates as well as the update feed with `.htaccess`
+* Integrate support for details appearance control of the update window – it should be configurable if "skip this update" and if "remind me later" is allowed.
+* Changed update window appearance: Resizing is no longer possible, also the title bar is removed. The user has now only the buttons to react on a proposed update.
+
+----
+
 Fervor is a simple, multiplatform ([Qt](http://qt.nokia.com/)-based) application update tool, inspired by [Sparkle](http://sparkle.andymatuschak.org/).
 
 

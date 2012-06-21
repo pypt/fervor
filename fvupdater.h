@@ -6,6 +6,7 @@
 #include <QNetworkAccessManager>
 #include <QUrl>
 #include <QXmlStreamReader>
+class QNetworkReply;
 class FvUpdateWindow;
 class FvUpdateConfirmDialog;
 class FvAvailableUpdate;
@@ -25,6 +26,18 @@ public:
 	void SetFeedURL(QUrl feedURL);
 	void SetFeedURL(QString feedURL);
 	QString GetFeedURL();
+	void finishUpdate(QString pathToFinish = "");
+	void setRequiredSslFingerPrint(QString md5);
+	QString getRequiredSslFingerPrint();	// returns md5!
+	// HTTP Authentuication - for security reasons no getters are provided, only a setter
+	void setHtAuthCredentials(QString user, QString pass);
+	void setHtAuthUsername(QString user);
+	void setHtAuthPassword(QString pass);
+	void setSkipVersionAllowed(bool allowed);
+	void setRemindLaterAllowed(bool allowed);
+	bool getSkipVersionAllowed();
+	bool getRemindLaterAllowed();
+
 	
 public slots:
 
@@ -57,10 +70,6 @@ protected slots:
 	void SkipUpdate();
 	void RemindMeLater();
 
-	// Update confirmation dialog button slots
-	void UpdateInstallationConfirmed();
-	void UpdateInstallationNotConfirmed();
-
 private:
 
 	//
@@ -84,11 +93,6 @@ private:
 	void hideUpdaterWindow();										// Hide + destroy m_updaterWindow
 	void updaterWindowWasClosed();									// Sent by the updater window when it gets closed
 
-	FvUpdateConfirmDialog* m_updateConfirmationDialog;						// Update confirmation dialog (NULL if not shown)
-	void showUpdateConfirmationDialogUpdatedWithCurrentUpdateProposal();	// Show update confirmation dialog
-	void hideUpdateConfirmationDialog();									// Hide + destroy m_updateConfirmationDialog
-	void updateConfirmationDialogWasClosed();								// Sent by the update confirmation dialog when it gets closed
-
 	// Available update (NULL if not fetched)
 	FvAvailableUpdate* m_proposedUpdate;
 
@@ -98,6 +102,9 @@ private:
 	bool m_silentAsMuchAsItCouldGet;
 
 	// Dialogs (notifications)
+	bool skipVersionAllowed;
+	bool remindLaterAllowed;
+
 	void showErrorDialog(QString message, bool showEvenInSilentMode = false);			// Show an error message
 	void showInformationDialog(QString message, bool showEvenInSilentMode = false);		// Show an informational message
 
@@ -114,15 +121,19 @@ private:
 	void startDownloadFeed(QUrl url);	// Start downloading feed
 	void cancelDownloadFeed();			// Stop downloading the current feed
 
-private slots:
+	//
+	// SSL Fingerprint Check infrastructure
+	//
+	QString m_requiredSslFingerprint;
 
-	void httpFeedReadyRead();
-	void httpFeedUpdateDataReadProgress(qint64 bytesRead,
-										qint64 totalBytes);
-	void httpFeedDownloadFinished();
+	bool checkSslFingerPrint(QUrl urltoCheck);	// true=ssl Fingerprint accepted, false= ssl Fingerprint NOT accepted
 
+	//
+	// Htauth-Infrastructure
+	//
+	QString htAuthUsername;
+	QString htAuthPassword;
 
-private:
 
 	//
 	// XML parser
@@ -144,6 +155,24 @@ private:
 	// Helpers
 	//
 	void installTranslator();			// Initialize translation mechanism
+	void restartApplication();			// Restarts application after update
+
+private slots:
+
+	void authenticationRequired ( QNetworkReply * reply, QAuthenticator * authenticator );
+	void httpFeedReadyRead();
+	void httpFeedUpdateDataReadProgress(qint64 bytesRead,
+										qint64 totalBytes);
+	void httpFeedDownloadFinished();
+
+	//
+	// Download and install Update infrastructure
+	//
+	void httpUpdateDownloadFinished();
+	bool unzipUpdate(const QString & filePath, const QString & extDirPath, const QString & singleFileName = QString(""));	// returns true on success
+
+signals:
+	void updatedFinishedSuccessfully();
 
 };
 

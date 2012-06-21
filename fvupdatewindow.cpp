@@ -7,13 +7,18 @@
 #include <QDebug>
 
 
-FvUpdateWindow::FvUpdateWindow(QWidget *parent) :
-	QWidget(parent),
+FvUpdateWindow::FvUpdateWindow(QWidget *parent, bool skipVersionAllowed, bool remindLaterAllowed) :
+	QWidget(parent, Qt::CustomizeWindowHint),
 	m_ui(new Ui::FvUpdateWindow)
 {
 	m_ui->setupUi(this);
 
 	m_appIconScene = 0;
+
+	if(!skipVersionAllowed)
+		m_ui->skipThisVersionButton->hide();
+	if(!remindLaterAllowed)
+		m_ui->remindMeLaterButton->hide();
 
 	// Delete on close
 	setAttribute(Qt::WA_DeleteOnClose, true);

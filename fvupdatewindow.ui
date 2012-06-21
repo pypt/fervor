@@ -14,6 +14,9 @@
    <string>Software Update</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_6">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetFixedSize</enum>
+   </property>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>

@@ -13,7 +13,7 @@ class FvUpdateWindow : public QWidget
 	Q_OBJECT
 	
 public:
-	explicit FvUpdateWindow(QWidget *parent = 0);
+	explicit FvUpdateWindow(QWidget *parent, bool skipVersionAllowed, bool remindLaterAllowed);
 	~FvUpdateWindow();
 
 	// Update the current update proposal from FvUpdater
@@ -28,3 +28,5 @@ private:
 };
 
 #endif // FVUPDATEWINDOW_H
+
+	
