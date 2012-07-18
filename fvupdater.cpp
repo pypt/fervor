@@ -363,7 +363,7 @@ bool FvUpdater::xmlParseFeed()
 
 	QString xmlTitle, xmlLink, xmlReleaseNotesLink, xmlPubDate, xmlEnclosureUrl,
 			xmlEnclosureVersion, xmlEnclosurePlatform, xmlEnclosureType;
-	unsigned long xmlEnclosureLength;
+	unsigned long xmlEnclosureLength = 0;
 
 	// Parse
 	while (! m_xml.atEnd()) {
