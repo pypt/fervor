@@ -8,10 +8,10 @@
 
 	<channel>
 		<title>Your Great App's Changelog</title>
-		<link>https://raw.github.com/pypt/fervor/master/sample/Appcast.xml</link>
+		<link>http://pypt.github.com/fervor/Appcast.xml</link>
 		<description>Most recent changes with links to updates.</description>
 		<language>en</language>
-		<atom:link href="https://raw.github.com/pypt/fervor/master/sample/Appcast.xml" rel="self" type="application/rss+xml" />
+		<atom:link href="http://pypt.github.com/fervor/Appcast.xml" rel="self" type="application/rss+xml" />
 
 		<item>
 			<title>Version 2.0 (2 bugs fixed; 3 new features)</title>
