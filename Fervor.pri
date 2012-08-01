@@ -1,19 +1,28 @@
 QT += core gui webkit network
 
-DEFINES += FV_APP_NAME=\\\"$$TARGET\\\"
-DEFINES += FV_APP_VERSION=\\\"$$VERSION\\\"
+isEmpty(FV_APP_NAME) {
+	warning("Fervor: falling back to application name '$$TARGET'")
+	DEFINES += FV_APP_NAME=\\\"$$TARGET\\\"
+} else {
+	message("Fervor: building for application name '$$FV_APP_NAME'")
+	DEFINES += FV_APP_NAME=\\\"$$FV_APP_NAME\\\"
+}
 
+isEmpty(FV_APP_VERSION) {
+	warning("Fervor: falling back to application version '$$VERSION'")
+	DEFINES += FV_APP_VERSION=\\\"$$VERSION\\\"
+} else {
+	message("Fervor: building for application versione '$$FV_APP_VERSION'")
+	DEFINES += FV_APP_VERSION=\\\"$$FV_APP_VERSION\\\"
+}
 
-
-# FIXME unit tests
+# Unit tests
 #DEFINES += FV_DEBUG=1
 #DEPENDPATH += "$$PWD/tests/"
 #INCLUDEPATH += "$$PWD/tests/"
 #CONFIG += qtestlib
 #SOURCES += tests/fvversioncomparatortest.cpp
 #HEADERS += tests/fvversioncomparatortest.h
-
-
 
 DEPENDPATH += "$$PWD"
 INCLUDEPATH += "$$PWD"
