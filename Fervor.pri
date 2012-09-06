@@ -12,7 +12,7 @@ isEmpty(FV_APP_VERSION) {
 	warning("Fervor: falling back to application version '$$VERSION'")
 	DEFINES += FV_APP_VERSION=\\\"$$VERSION\\\"
 } else {
-	message("Fervor: building for application versione '$$FV_APP_VERSION'")
+	message("Fervor: building for application version '$$FV_APP_VERSION'")
 	DEFINES += FV_APP_VERSION=\\\"$$FV_APP_VERSION\\\"
 }
 
