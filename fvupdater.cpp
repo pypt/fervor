@@ -401,16 +401,25 @@ bool FvUpdater::xmlParseFeed()
 						} else {
 							xmlEnclosureUrl = "";
 						}
-						if (attribs.hasAttribute("fervor:version")) {
-							xmlEnclosureVersion = attribs.value("fervor:version").toString().trimmed();
+
+                        // First check for Sparkle's version, then overwrite with Fervor's version (if any)
+                        if (attribs.hasAttribute("sparkle:version")) {
+                            QString candidateVersion = attribs.value("sparkle:version").toString().trimmed();
+                            if (! candidateVersion.isEmpty()) {
+                                xmlEnclosureVersion = candidateVersion;
+                            }
+                        } else {
+                            xmlEnclosureVersion = "";
+                        }
+                        if (attribs.hasAttribute("fervor:version")) {
+                            QString candidateVersion = attribs.value("fervor:version").toString().trimmed();
+                            if (! candidateVersion.isEmpty()) {
+                                xmlEnclosureVersion = candidateVersion;
+                            }
 						} else {
 							xmlEnclosureVersion = "";
 						}
-						if (attribs.hasAttribute("sparkle:version")) {
-							xmlEnclosureVersion = attribs.value("sparkle:version").toString().trimmed();
-						} else {
-							xmlEnclosureVersion = "";
-						}
+
 						if (attribs.hasAttribute("length")) {
 							xmlEnclosureLength = attribs.value("length").toString().toLong();
 						} else {
@@ -488,10 +497,15 @@ bool FvUpdater::searchDownloadedFeedForUpdates(QString xmlTitle,
 											   unsigned long xmlEnclosureLength,
 											   QString xmlEnclosureType)
 {
-	Q_UNUSED(xmlTitle);
-	Q_UNUSED(xmlPubDate);
-	Q_UNUSED(xmlEnclosureLength);
-	Q_UNUSED(xmlEnclosureType);
+    qDebug() << "Title:" << xmlTitle;
+    qDebug() << "Link:" << xmlLink;
+    qDebug() << "Release notes link:" << xmlReleaseNotesLink;
+    qDebug() << "Pub. date:" << xmlPubDate;
+    qDebug() << "Enclosure URL:" << xmlEnclosureUrl;
+    qDebug() << "Enclosure version:" << xmlEnclosureVersion;
+    qDebug() << "Enclosure platform:" << xmlEnclosurePlatform;
+    qDebug() << "Enclosure length:" << xmlEnclosureLength;
+    qDebug() << "Enclosure type:" << xmlEnclosureType;
 
 	// Validate
 	if (xmlReleaseNotesLink.isEmpty()) {
@@ -509,7 +523,7 @@ bool FvUpdater::searchDownloadedFeedForUpdates(QString xmlTitle,
 		return false;
 	}
 	if (xmlEnclosureUrl.isEmpty() || xmlEnclosureVersion.isEmpty() || xmlEnclosurePlatform.isEmpty()) {
-		showErrorDialog(tr("Feed error: invalid \"enclosure\" with the download link"), false);
+        showErrorDialog(tr("Feed error: invalid \"enclosure\" with the download link"), false);
 		return false;
 	}
 
