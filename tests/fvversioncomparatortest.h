@@ -8,14 +8,11 @@ class FvVersionComparatorTest : public QObject
 {
 	Q_OBJECT
 
-public slots:
-
-	void runAll();
-
+private slots:
 	void testNumbers();
 	void testPrereleases();
 	void testVersionsWithBuildNumbers();
-	
+
 };
 
 #endif // FVVERSIONCOMPARATORTEST_H
