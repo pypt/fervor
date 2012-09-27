@@ -42,3 +42,5 @@ void FvVersionComparatorTest::testVersionsWithBuildNumbers()
 	QVERIFY(FvVersionComparator::CompareVersions("1.0.1b5 (1234)", "1.0.1b6 (1234)") == FvVersionComparator::kAscending);
 	QVERIFY(FvVersionComparator::CompareVersions("3.3 (5847)", "3.3.1b1 (5902)") == FvVersionComparator::kAscending);
 }
+
+QTEST_MAIN(FvVersionComparatorTest)
