@@ -16,6 +16,7 @@ void FvVersionComparatorTest::testNumbers()
 	QVERIFY(FvVersionComparator::CompareVersions("1.0.0", "0.0.1") == FvVersionComparator::kDescending);
 	QVERIFY(FvVersionComparator::CompareVersions("1.0.0", "0.1.0") == FvVersionComparator::kDescending);
 	QVERIFY(FvVersionComparator::CompareVersions("1.0.0", "0.9.9") == FvVersionComparator::kDescending);
+	QVERIFY(FvVersionComparator::CompareVersions("0.0.1", "0.0.2") == FvVersionComparator::kAscending);
 }
 
 void FvVersionComparatorTest::testPrereleases()
