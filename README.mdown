@@ -57,7 +57,16 @@ Git clone Fervor:
 You might also download [a tarball](https://github.com/pypt/fervor/tarball/master).
 
 
-## 2a. Include Fervor into your Qt Project (`.pro` file)
+## 2. Include Fervor into your project
+
+You can use Fervor either in your Qt Creator project or in your CMake project.
+
+If you want to include Fervor into your Qt Creator project, read section #1 below.
+
+If you use CMake and would like to build Fervor with it instead of Qt Creator, read section #2 below.
+
+
+### 1. Include Fervor into your Qt Creator Project (`.pro` file)
 
 Include Fervor's project include file `Fervor.pri` after setting your application's `TARGET` and `VERSION`:
 
@@ -76,7 +85,9 @@ Include Fervor's project include file `Fervor.pri` after setting your applicatio
 
 Fervor will append itself to your application's `HEADERS`, `SOURCES`, `FORMS` and `TRANSLATIONS`, and thus will become an integral part of your application's binary.
 
-## 2b. Include Fervor into your CMake Project (`CMakeLists.txt` file)
+**or**
+
+### 2. Include Fervor into your CMake Project (`CMakeLists.txt` file)
 
 In your `CMakeLists.txt` set the application name and version info, include the fervor-directory and link with it:
 
@@ -95,7 +106,7 @@ In your `CMakeLists.txt` set the application name and version info, include the 
 		Fervor
 	)
 
-***Note:*** `fervor-directory` must be a subdirectory in your source-directory.
+*Note:* `fervor-directory` must be a subdirectory in your source-directory.
 
 ## 3. Set your application's `applicationName`, `applicationVersion`, `organizationName` and `organizationDomain` if you haven't done so already
 
