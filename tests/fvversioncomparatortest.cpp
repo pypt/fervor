@@ -1,14 +1,6 @@
 #include "fvversioncomparatortest.h"
 #include "fvversioncomparator.h"
 
-
-void FvVersionComparatorTest::runAll()
-{
-	testNumbers();
-	testPrereleases();
-	testVersionsWithBuildNumbers();
-}
-
 void FvVersionComparatorTest::testNumbers()
 {
 	QVERIFY(FvVersionComparator::CompareVersions("1.0", "1.1") == FvVersionComparator::kAscending);
@@ -16,6 +8,15 @@ void FvVersionComparatorTest::testNumbers()
 	QVERIFY(FvVersionComparator::CompareVersions("2.0", "1.1") == FvVersionComparator::kDescending);
 	QVERIFY(FvVersionComparator::CompareVersions("0.1", "0.0.1") == FvVersionComparator::kDescending);
 	QVERIFY(FvVersionComparator::CompareVersions("0.1", "0.1.2") == FvVersionComparator::kAscending);
+
+	QVERIFY(FvVersionComparator::CompareVersions("1.0.0", "1.0.0") == FvVersionComparator::kSame);
+	QVERIFY(FvVersionComparator::CompareVersions("1.0.0", "1.0.1") == FvVersionComparator::kAscending);
+	QVERIFY(FvVersionComparator::CompareVersions("1.0.0", "1.1.0") == FvVersionComparator::kAscending);
+	QVERIFY(FvVersionComparator::CompareVersions("1.0.0", "2.0.0") == FvVersionComparator::kAscending);
+	QVERIFY(FvVersionComparator::CompareVersions("1.0.0", "0.0.1") == FvVersionComparator::kDescending);
+	QVERIFY(FvVersionComparator::CompareVersions("1.0.0", "0.1.0") == FvVersionComparator::kDescending);
+	QVERIFY(FvVersionComparator::CompareVersions("1.0.0", "0.9.9") == FvVersionComparator::kDescending);
+	QVERIFY(FvVersionComparator::CompareVersions("0.0.1", "0.0.2") == FvVersionComparator::kAscending);
 }
 
 void FvVersionComparatorTest::testPrereleases()
@@ -42,3 +43,5 @@ void FvVersionComparatorTest::testVersionsWithBuildNumbers()
 	QVERIFY(FvVersionComparator::CompareVersions("1.0.1b5 (1234)", "1.0.1b6 (1234)") == FvVersionComparator::kAscending);
 	QVERIFY(FvVersionComparator::CompareVersions("3.3 (5847)", "3.3.1b1 (5902)") == FvVersionComparator::kAscending);
 }
+
+QTEST_MAIN(FvVersionComparatorTest)

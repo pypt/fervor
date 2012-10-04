@@ -392,9 +392,10 @@ bool FvUpdater::xmlParseFeed()
 				QXmlStreamAttributes attribs = m_xml.attributes();
 
 				if (attribs.hasAttribute("fervor:platform")) {
-					xmlEnclosurePlatform = attribs.value("fervor:platform").toString().trimmed();
 
-					if (FvPlatform::CurrentlyRunningOnPlatform(xmlEnclosurePlatform)) {
+					if (FvPlatform::CurrentlyRunningOnPlatform(attribs.value("fervor:platform").toString().trimmed())) {
+
+						xmlEnclosurePlatform = attribs.value("fervor:platform").toString().trimmed();
 
 						if (attribs.hasAttribute("url")) {
 							xmlEnclosureUrl = attribs.value("url").toString().trimmed();
