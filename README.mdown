@@ -170,3 +170,13 @@ When the user clicks "Install Update", he / she is then shown a link (`<enclosur
 See [https://raw.github.com/pypt/fervor/master/sample/Appcast.xml](https://raw.github.com/pypt/fervor/master/sample/Appcast.xml) for an "appcast" example, and [http://pypt.github.com/fervor/RelNotes.html](http://pypt.github.com/fervor/RelNotes.html) for an "release notes" example.
 
 It is up to you to implement "appcasts" and "release notes". If you don't release too many versions of your application, it is even plausible to edit them by hand every time you release an update.
+
+
+# Donations
+
+Donors: Marek Pazdan. Thanks!
+
+
+# Contacts
+
+I'm Linas, my email is <shirshegsm@gmail.com>
