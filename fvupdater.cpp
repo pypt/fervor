@@ -409,17 +409,13 @@ bool FvUpdater::xmlParseFeed()
                             if (! candidateVersion.isEmpty()) {
                                 xmlEnclosureVersion = candidateVersion;
                             }
-                        } else {
-                            xmlEnclosureVersion = "";
                         }
                         if (attribs.hasAttribute("fervor:version")) {
                             QString candidateVersion = attribs.value("fervor:version").toString().trimmed();
                             if (! candidateVersion.isEmpty()) {
                                 xmlEnclosureVersion = candidateVersion;
                             }
-						} else {
-							xmlEnclosureVersion = "";
-						}
+                        }
 
 						if (attribs.hasAttribute("length")) {
 							xmlEnclosureLength = attribs.value("length").toString().toLong();
@@ -483,6 +479,10 @@ bool FvUpdater::xmlParseFeed()
 
 		}
 	}
+
+    // No updates were found if we're at this point
+    // (not a single <item> element found)
+    showInformationDialog(tr("No updates were found."), false);
 
 	return false;
 }
