@@ -1,3 +1,5 @@
+This is a Qt5 Update of this branch.
+
 This is a branch that was made by Torben Dannhauer that promises an *autoupdate functionality* at least on Windows.
 
 According to the author, the following changes were made:
