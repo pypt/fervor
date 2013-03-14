@@ -1,4 +1,4 @@
-#if (QT_VERSION >= 0x050000)
+#if QT_VERSION <= 0x050000
     #include <QApplication>
 #else
     #include <QtGui/QApplication>

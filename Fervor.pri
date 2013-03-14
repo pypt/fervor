@@ -1,4 +1,4 @@
-contains(QT_VERSION, ^5\\..[0-9]\\.*){
+contains(QT_VERSION, ^5\\.[0-9]\\..*){
     QT += core widgets webkitwidgets network
     win32:INCLUDEPATH += $$[QT_INSTALL_PREFIX]/include/QtZlib
 }else{
