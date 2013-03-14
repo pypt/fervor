@@ -1,7 +1,12 @@
 #ifndef FVUPDATEWINDOW_H
 #define FVUPDATEWINDOW_H
 
-#include <QWidget>
+#if QT_VERSION >= 0x050000
+    #include <QtWidgets/QWidget>
+#else
+    #include <QWidget>
+#endif
+
 class QGraphicsScene;
 
 namespace Ui {

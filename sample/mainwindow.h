@@ -1,8 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-
+#if QT_VERSION >= 0x050000
+    #include <QtWidgets/QMainWindow>
+#else
+    #include<QMainWindow>
+#endif
 
 namespace Ui {
 class MainWindow;
