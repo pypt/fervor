@@ -87,8 +87,12 @@ void FvUpdater::installTranslator()
 	QTranslator translator;
 	QString locale = QLocale::system().name();
 	translator.load(QString("fervor_") + locale);
-	QTextCodec::setCodecForTr(QTextCodec::codecForName("utf8"));
-	qApp->installTranslator(&translator);
+
+#if QT_VERSION < 0x050000
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("utf8"));
+#endif
+
+    qApp->installTranslator(&translator);
 }
 
 void FvUpdater::showUpdaterWindowUpdatedWithCurrentUpdateProposal()
@@ -243,9 +247,9 @@ void FvUpdater::httpUpdateDownloadFinished()
 				unzipUpdate(fileName, QApplication::applicationDirPath() );
 
 				// Delete update archive
-				while(QFile::remove(fileName) )
-				{
-				};
+                while(QFile::remove(fileName) )
+                {
+                };
 
 				// Restart ap to clean up and start usual business
 				restartApplication();
@@ -266,7 +270,7 @@ bool FvUpdater::unzipUpdate(const QString & filePath, const QString & extDirPath
 {
 	QuaZip zip(filePath);
 
-	if (!zip.open(QuaZip::mdUnzip)) {
+    if (!zip.open(QuaZip::mdUnzip)) {
 		qWarning()<<tr("Error: Unable to open zip archive %1 for unzipping: %2").arg(filePath).arg(zip.getZipError());
 		return false;
 	}
