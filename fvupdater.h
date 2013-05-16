@@ -88,10 +88,14 @@ private:
 	//
 	// Windows / dialogs
 	//
+#ifdef FV_GUI
 	FvUpdateWindow* m_updaterWindow;								// Updater window (NULL if not shown)
 	void showUpdaterWindowUpdatedWithCurrentUpdateProposal();		// Show updater window
 	void hideUpdaterWindow();										// Hide + destroy m_updaterWindow
 	void updaterWindowWasClosed();									// Sent by the updater window when it gets closed
+#else
+	void decideWhatToDoWithCurrentUpdateProposal();                 // Perform an action which is configured in settings
+#endif
 
 	// Available update (NULL if not fetched)
 	FvAvailableUpdate* m_proposedUpdate;

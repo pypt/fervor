@@ -1,23 +1,30 @@
 #include "fvupdater.h"
-#include "fvupdatewindow.h"
 #include "fvplatform.h"
 #include "fvignoredversions.h"
 #include "fvavailableupdate.h"
-#include "fvupdatedownloadprogress.h"
-#include <QApplication>
+#include <QCoreApplication>
 #include <QtNetwork>
-#include <QMessageBox>
-#include <QDesktopServices>
 #include <QDebug>
+#include <QSettings>
 #include "quazip.h"
 #include "quazipfile.h"
 
+#ifdef FV_GUI
+#include "fvupdatewindow.h"
+#include "fvupdatedownloadprogress.h"
+#include <QMessageBox>
+#include <QDesktopServices>
+#else
+// QSettings key for automatic update installation
+#define FV_NEW_VERSION_POLICY_KEY              "FVNewVersionPolicy"
+#endif
 
 #ifdef FV_DEBUG
 	// Unit tests
 #	include "fvversioncomparatortest.h"
 #endif
 
+extern QSettings* settings;
 
 FvUpdater* FvUpdater::m_Instance = 0;
 
@@ -50,7 +57,9 @@ void FvUpdater::drop()
 FvUpdater::FvUpdater() : QObject(0)
 {
 	m_reply = 0;
+#ifdef FV_GUI
 	m_updaterWindow = 0;
+#endif
 	m_proposedUpdate = 0;
 	m_requiredSslFingerprint = "";
 	htAuthUsername = "";
@@ -79,7 +88,9 @@ FvUpdater::~FvUpdater()
 		m_proposedUpdate = 0;
 	}
 
+#ifdef FV_GUI
 	hideUpdaterWindow();
+#endif
 }
 
 void FvUpdater::installTranslator()
@@ -92,9 +103,10 @@ void FvUpdater::installTranslator()
     QTextCodec::setCodecForTr(QTextCodec::codecForName("utf8"));
 #endif
 
-    qApp->installTranslator(&translator);
+	qApp->installTranslator(&translator);
 }
 
+#ifdef FV_GUI
 void FvUpdater::showUpdaterWindowUpdatedWithCurrentUpdateProposal()
 {
 	// Destroy window if already exists
@@ -124,6 +136,7 @@ void FvUpdater::updaterWindowWasClosed()
 	// (Re-)nullify a pointer to a destroyed QWidget or you're going to have a bad time.
 	m_updaterWindow = 0;
 }
+#endif
 
 void FvUpdater::SetFeedURL(QUrl feedURL)
 {
@@ -179,15 +192,18 @@ void FvUpdater::InstallUpdate()
 		qDebug()<<"OK";
 
 	// Show download Window
+#ifdef FV_GUI
 	FvUpdateDownloadProgress* dlwindow = new FvUpdateDownloadProgress(NULL);
 	connect(reply, SIGNAL(downloadProgress(qint64, qint64)), dlwindow, SLOT(downloadProgress(qint64, qint64) ));
 	connect(&m_qnam, SIGNAL(finished(QNetworkReply*)), dlwindow, SLOT(close()));
 	dlwindow->show();
-
+#endif
 
 	emit (updatedFinishedSuccessfully());
 
+#ifdef FV_GUI
 	hideUpdaterWindow();
+#endif
 }
 
 void FvUpdater::httpUpdateDownloadFinished()
@@ -210,7 +226,7 @@ void FvUpdater::httpUpdateDownloadFinished()
 			{
 				// Write download into File
 				QFileInfo fileInfo=reply->url().path();
-				QString fileName = QApplication::applicationDirPath()+"/"+fileInfo.fileName();
+				QString fileName = QCoreApplication::applicationDirPath()+"/"+fileInfo.fileName();
 				//qDebug()<<"Writing downloaded file into "<<fileName;
 	
 				QFile file(fileName);
@@ -231,8 +247,8 @@ void FvUpdater::httpUpdateDownloadFinished()
 					// Rename all current files with available update.
 					for (int i=0;i<updateFiles.size();i++)
 					{
-						QString sourceFilePath = QApplication::applicationDirPath()+"\\"+updateFiles[i].name;
-						QDir appDir( QApplication::applicationDirPath() );
+						QString sourceFilePath = QCoreApplication::applicationDirPath()+"\\"+updateFiles[i].name;
+						QDir appDir( QCoreApplication::applicationDirPath() );
 
 						QFileInfo file(	sourceFilePath );
 						if(file.exists())
@@ -244,7 +260,7 @@ void FvUpdater::httpUpdateDownloadFinished()
 				}
 
 				// Install updated Files
-				unzipUpdate(fileName, QApplication::applicationDirPath() );
+				unzipUpdate(fileName, QCoreApplication::applicationDirPath() );
 
 				// Delete update archive
                 while(QFile::remove(fileName) )
@@ -356,14 +372,18 @@ void FvUpdater::SkipUpdate()
 	// Start ignoring this particular version
 	FVIgnoredVersions::IgnoreVersion(proposedUpdate->GetEnclosureVersion());
 
+#ifdef FV_GUI
 	hideUpdaterWindow();
+#endif
 }
 
 void FvUpdater::RemindMeLater()
 {
 	//qDebug() << "Remind me later";
 
+#ifdef FV_GUI
 	hideUpdaterWindow();
+#endif
 }
 
 bool FvUpdater::CheckForUpdates(bool silentAsMuchAsItCouldGet)
@@ -377,23 +397,23 @@ bool FvUpdater::CheckForUpdates(bool silentAsMuchAsItCouldGet)
 
 	// Check if application's organization name and domain are set, fail otherwise
 	// (nowhere to store QSettings to)
-	if (QApplication::organizationName().isEmpty()) {
-		qCritical() << "QApplication::organizationName is not set. Please do that.";
+	if (QCoreApplication::organizationName().isEmpty()) {
+		qCritical() << "QCoreApplication::organizationName is not set. Please do that.";
 		return false;
 	}
-	if (QApplication::organizationDomain().isEmpty()) {
-		qCritical() << "QApplication::organizationDomain is not set. Please do that.";
+	if (QCoreApplication::organizationDomain().isEmpty()) {
+		qCritical() << "QCoreApplication::organizationDomain is not set. Please do that.";
 		return false;
 	}
 
-	if(QApplication::applicationName().isEmpty()) {
-		qCritical() << "QApplication::applicationName is not set. Please do that.";
+	if(QCoreApplication::applicationName().isEmpty()) {
+		qCritical() << "QCoreApplication::applicationName is not set. Please do that.";
 		return false;
 	}
 
 	// Set application version is not set yet
-	if (QApplication::applicationVersion().isEmpty()) {
-		qCritical() << "QApplication::applicationVersion is not set. Please do that.";
+	if (QCoreApplication::applicationVersion().isEmpty()) {
+		qCritical() << "QCoreApplication::applicationVersion is not set. Please do that.";
 		return false;
 	}
 
@@ -666,8 +686,13 @@ bool FvUpdater::searchDownloadedFeedForUpdates(QString xmlTitle,
 	m_proposedUpdate->SetEnclosureLength(xmlEnclosureLength);
 	m_proposedUpdate->SetEnclosureType(xmlEnclosureType);
 
+#ifdef FV_GUI
 	// Show "look, there's an update" window
 	showUpdaterWindowUpdatedWithCurrentUpdateProposal();
+#else
+	// Decide ourselves what to do
+	decideWhatToDoWithCurrentUpdateProposal();
+#endif
 
 	return true;
 }
@@ -682,11 +707,15 @@ void FvUpdater::showErrorDialog(QString message, bool showEvenInSilentMode)
 		}
 	}
 
+#ifdef FV_GUI
 	QMessageBox dlFailedMsgBox;
 	dlFailedMsgBox.setIcon(QMessageBox::Critical);
 	dlFailedMsgBox.setText(tr("Error"));
 	dlFailedMsgBox.setInformativeText(message);
 	dlFailedMsgBox.exec();
+#else
+	qCritical() << message;
+#endif
 }
 
 void FvUpdater::showInformationDialog(QString message, bool showEvenInSilentMode)
@@ -698,16 +727,20 @@ void FvUpdater::showInformationDialog(QString message, bool showEvenInSilentMode
 		}
 	}
 
+#ifdef FV_GUI
 	QMessageBox dlInformationMsgBox;
 	dlInformationMsgBox.setIcon(QMessageBox::Information);
 	dlInformationMsgBox.setText(tr("Information"));
 	dlInformationMsgBox.setInformativeText(message);
 	dlInformationMsgBox.exec();
+#else
+	qDebug() << message;
+#endif
 }
 
 void FvUpdater::finishUpdate(QString pathToFinish)
 {
-	pathToFinish = pathToFinish.isEmpty() ? QApplication::applicationDirPath() : pathToFinish;
+	pathToFinish = pathToFinish.isEmpty() ? QCoreApplication::applicationDirPath() : pathToFinish;
 	QDir appDir(pathToFinish);
 	appDir.setFilter( QDir::Files | QDir::Dirs );
 
@@ -839,5 +872,16 @@ bool FvUpdater::getSkipVersionAllowed()
 bool FvUpdater::getRemindLaterAllowed()
 {
 	return remindLaterAllowed;
+}
+
+void FvUpdater::decideWhatToDoWithCurrentUpdateProposal()
+{
+	QString policy = settings->value(FV_NEW_VERSION_POLICY_KEY).toString();
+	if(policy == "install")
+		InstallUpdate();
+	else if(policy == "skip")
+		SkipUpdate();
+	else
+		RemindMeLater();
 }
 
