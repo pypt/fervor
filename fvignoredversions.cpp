@@ -1,8 +1,10 @@
 #include "fvignoredversions.h"
 #include "fvversioncomparator.h"
 #include <QSettings>
-#include <QApplication>
+#include <QCoreApplication>
 #include <string>
+
+extern QSettings* settings;
 
 // QSettings key for the latest skipped version
 #define FV_IGNORED_VERSIONS_LATEST_SKIPPED_VERSION_KEY	"FVLatestSkippedVersion"
@@ -22,20 +24,20 @@ bool FVIgnoredVersions::VersionIsIgnored(QString version)
 	//	3) A newer version (don't ignore)
 	// 'version' is not likely to contain an older version in any case.
 
-	if (version == QApplication::applicationVersion()) {
+	if (version == QCoreApplication::applicationVersion()) {
 		return true;
 	}
 
-	QSettings settings;
-	if (settings.contains(FV_IGNORED_VERSIONS_LATEST_SKIPPED_VERSION_KEY)) {
-		QString lastSkippedVersion = settings.value(FV_IGNORED_VERSIONS_LATEST_SKIPPED_VERSION_KEY).toString();
+	//QSettings settings;
+	if (settings->contains(FV_IGNORED_VERSIONS_LATEST_SKIPPED_VERSION_KEY)) {
+		QString lastSkippedVersion = settings->value(FV_IGNORED_VERSIONS_LATEST_SKIPPED_VERSION_KEY).toString();
 		if (version == lastSkippedVersion) {
 			// Implicitly skipped version - skip
 			return true;
 		}
 	}
 
-	std::string currentAppVersion = QApplication::applicationVersion().toStdString();
+	std::string currentAppVersion = QCoreApplication::applicationVersion().toStdString();
 	std::string suggestedVersion = std::string(version.toStdString());
 	if (FvVersionComparator::CompareVersions(currentAppVersion, suggestedVersion) == FvVersionComparator::kAscending) {
 		// Newer version - do not skip
@@ -48,7 +50,7 @@ bool FVIgnoredVersions::VersionIsIgnored(QString version)
 
 void FVIgnoredVersions::IgnoreVersion(QString version)
 {
-	if (version == QApplication::applicationVersion()) {
+	if (version == QCoreApplication::applicationVersion()) {
 		// Don't ignore the current version
 		return;
 	}
@@ -57,8 +59,8 @@ void FVIgnoredVersions::IgnoreVersion(QString version)
 		return;
 	}
 
-	QSettings settings;
-	settings.setValue(FV_IGNORED_VERSIONS_LATEST_SKIPPED_VERSION_KEY, version);
+	//QSettings settings;
+	settings->setValue(FV_IGNORED_VERSIONS_LATEST_SKIPPED_VERSION_KEY, version);
 
 	return;
 }
