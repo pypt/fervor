@@ -50,7 +50,7 @@ Git clone Fervor:
 
 ...or add it as a submodule if you're using Git in your project:
 
-	git add submodule https://github.com/pypt/fervor.git fervor
+	git submodule add https://github.com/pypt/fervor.git fervor
 	git submodule init
 	git submodule update
 
