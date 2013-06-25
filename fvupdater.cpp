@@ -9,6 +9,10 @@
 #include "quazip.h"
 #include "quazipfile.h"
 
+#ifdef Q_WS_MAC
+#include "CoreFoundation/CoreFoundation.h"
+#endif
+
 #ifdef FV_GUI
 #include "fvupdatewindow.h"
 #include "fvupdatedownloadprogress.h"
@@ -27,7 +31,6 @@
 extern QSettings* settings;
 
 FvUpdater* FvUpdater::m_Instance = 0;
-
 
 FvUpdater* FvUpdater::sharedUpdater()
 {
@@ -224,9 +227,23 @@ void FvUpdater::httpUpdateDownloadFinished()
 		{
 			if (reply->isReadable())
 			{
+#ifdef Q_WS_MAC
+                CFURLRef appURLRef = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+                char path[PATH_MAX];
+                if (!CFURLGetFileSystemRepresentation(appURLRef, TRUE, (UInt8 *)path, PATH_MAX)) {
+                    // error!
+                }
+
+                CFRelease(appURLRef);
+                QString filePath = QString(path);
+                QString rootDirectory = filePath.left(filePath.lastIndexOf("/"));
+#else
+                QString rootDirectory = QCoreApplication::applicationDirPath() + "/";
+#endif
+                
 				// Write download into File
 				QFileInfo fileInfo=reply->url().path();
-				QString fileName = QCoreApplication::applicationDirPath()+"/"+fileInfo.fileName();
+				QString fileName = rootDirectory + fileInfo.fileName();
 				//qDebug()<<"Writing downloaded file into "<<fileName;
 	
 				QFile file(fileName);
@@ -247,7 +264,7 @@ void FvUpdater::httpUpdateDownloadFinished()
 					// Rename all current files with available update.
 					for (int i=0;i<updateFiles.size();i++)
 					{
-						QString sourceFilePath = QCoreApplication::applicationDirPath()+"\\"+updateFiles[i].name;
+						QString sourceFilePath = rootDirectory + "\\" + updateFiles[i].name;
 						QDir appDir( QCoreApplication::applicationDirPath() );
 
 						QFileInfo file(	sourceFilePath );
@@ -260,7 +277,7 @@ void FvUpdater::httpUpdateDownloadFinished()
 				}
 
 				// Install updated Files
-				unzipUpdate(fileName, QCoreApplication::applicationDirPath() );
+				unzipUpdate(fileName, rootDirectory);
 
 				// Delete update archive
                 while(QFile::remove(fileName) )
@@ -769,13 +786,12 @@ void FvUpdater::finishUpdate(QString pathToFinish)
 void FvUpdater::restartApplication()
 {
 	// Spawn a new instance of myApplication:
-    QProcess proc;
-	qDebug()<<"QCoreApplication::applicationFilePath() : "<<QCoreApplication::applicationFilePath();
-	proc.start(QCoreApplication::applicationFilePath());
- 
-	// abort current Instance
-	::exit(0);
-
+    QString app = QApplication::applicationFilePath();
+    QStringList arguments = QApplication::arguments();
+    QString wd = QDir::currentPath();
+    qDebug() << app << arguments << wd;
+    QProcess::startDetached(app, arguments, wd);
+    QApplication::exit();
 }
 
 void FvUpdater::setRequiredSslFingerPrint(QString md5)
@@ -874,6 +890,8 @@ bool FvUpdater::getRemindLaterAllowed()
 	return remindLaterAllowed;
 }
 
+#ifndef FV_GUI
+
 void FvUpdater::decideWhatToDoWithCurrentUpdateProposal()
 {
 	QString policy = settings->value(FV_NEW_VERSION_POLICY_KEY).toString();
@@ -885,3 +903,4 @@ void FvUpdater::decideWhatToDoWithCurrentUpdateProposal()
 		RemindMeLater();
 }
 
+#endif
