@@ -1,4 +1,4 @@
-QT += core gui webkit network
+QT += core gui webkit webkitwidgets network
 
 isEmpty(FV_APP_NAME) {
 	warning("Fervor: falling back to application name '$$TARGET'")
@@ -27,24 +27,26 @@ isEmpty(FV_APP_VERSION) {
 DEPENDPATH += "$$PWD"
 INCLUDEPATH += "$$PWD"
 
-SOURCES += fvupdatewindow.cpp \
-	fvupdater.cpp \
-	fvversioncomparator.cpp \
-	fvplatform.cpp \
-	fvignoredversions.cpp \
-	fvavailableupdate.cpp \
-	fvupdateconfirmdialog.cpp
+SOURCES += \
+        $$PWD/fvupdatewindow.cpp \
+        $$PWD/fvupdater.cpp \
+        $$PWD/fvversioncomparator.cpp \
+        $$PWD/fvplatform.cpp \
+        $$PWD/fvignoredversions.cpp \
+        $$PWD/fvavailableupdate.cpp \
+        $$PWD/fvupdateconfirmdialog.cpp
 
-HEADERS += fvupdatewindow.h \
-	fvupdater.h \
-	fvversioncomparator.h \
-	fvplatform.h \
-	fvignoredversions.h \
-	fvavailableupdate.h \
-	fvupdateconfirmdialog.h
+HEADERS += \
+        $$PWD/fvupdatewindow.h \
+        $$PWD/fvupdater.h \
+        $$PWD/fvversioncomparator.h \
+        $$PWD/fvplatform.h \
+        $$PWD/fvignoredversions.h \
+        $$PWD/fvavailableupdate.h \
+        $$PWD/fvupdateconfirmdialog.h
 
-FORMS += fvupdatewindow.ui \
-	fvupdateconfirmdialog.ui
+FORMS += $$PWD/fvupdatewindow.ui \
+        $$PWD/fvupdateconfirmdialog.ui
 
-TRANSLATIONS += fervor_lt.ts
+TRANSLATIONS += $$PWD/fervor_lt.ts
 CODECFORTR = UTF-8
