@@ -16,7 +16,17 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*){
 DEFINES += FV_APP_NAME=\\\"$$TARGET\\\"
 DEFINES += FV_APP_VERSION=\\\"$$VERSION\\\"
 
-
+PREVIOUS_FERVOR_GUI = $$cat($$PWD/fervor.gui)
+fervor_gui {
+    CURRENT_FERVOR_GUI = enabled
+} else {
+    CURRENT_FERVOR_GUI = disabled
+}
+# if last build was with another GUI option, recompile some files
+!equals(PREVIOUS_FERVOR_GUI, $$CURRENT_FERVOR_GUI) {
+    write_file($$PWD/fervor.gui, CURRENT_FERVOR_GUI)
+    touch($$PWD/fvupdater.h, $$PWD/fervor.gui)
+}
 
 DEFINES += QUAZIP_BUILD QUAZIP_STATIC
 
