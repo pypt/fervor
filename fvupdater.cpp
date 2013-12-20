@@ -289,7 +289,12 @@ void FvUpdater::startDownloadFeed(QUrl url)
 {
 	m_xml.clear();
 
-	m_reply = m_qnam.get(QNetworkRequest(url));
+	QNetworkRequest request;
+ 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/xml");
+ 	request.setHeader(QNetworkRequest::UserAgentHeader, QApplication::applicationName());
+ 	request.setUrl(url);
+
+	m_reply = m_qnam.get(request);
 
 	connect(m_reply, SIGNAL(readyRead()), this, SLOT(httpFeedReadyRead()));
 	connect(m_reply, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(httpFeedUpdateDataReadProgress(qint64, qint64)));
