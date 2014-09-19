@@ -1,21 +1,34 @@
+QT += core network
+!build_pass:message("If you want to enable GUI for Fervor, add CONFIG += fervor_gui to your .pro file")
 contains(QT_VERSION, ^5\\.[0-9]\\..*){
-    QT += core widgets webkitwidgets network
-    win32:INCLUDEPATH += $$[QT_INSTALL_PREFIX]/include/QtZlib
-}else{
-    #QT += core gui webkit network
-    QT += core webkit network
     fervor_gui {
         DEFINES += FV_GUI
-        QT += gui
+        QT += webkitwidgets
+    }
+    win32:INCLUDEPATH += $$[QT_INSTALL_PREFIX]/include/QtZlib
+}else{
+    fervor_gui {
+        DEFINES += FV_GUI
+        QT += gui webkit
     }
     win32:INCLUDEPATH += $$[QT_INSTALL_PREFIX]/../../../../QtSources/4.8.1/src/3rdparty/zlib
 }
 DEFINES += FV_APP_NAME=\\\"$$TARGET\\\"
 DEFINES += FV_APP_VERSION=\\\"$$VERSION\\\"
 
+PREVIOUS_FERVOR_GUI = $$cat($$PWD/fervor.gui)
+fervor_gui {
+    CURRENT_FERVOR_GUI = enabled
+} else {
+    CURRENT_FERVOR_GUI = disabled
+}
+# if last build was with another GUI option, recompile some files
+!equals(PREVIOUS_FERVOR_GUI, $$CURRENT_FERVOR_GUI) {
+    write_file($$PWD/fervor.gui, CURRENT_FERVOR_GUI)
+    touch($$PWD/fvupdater.h, $$PWD/fervor.gui)
+}
 
-
-DEFINES +=QUAZIP_BUILD QUAZIP_STATIC
+DEFINES += QUAZIP_BUILD QUAZIP_STATIC
 
 INCLUDEPATH += $$PWD/quazip
 HEADERS += $$PWD/quazip/crypt.h \

@@ -1,11 +1,7 @@
 #ifndef FVUPDATEWINDOW_H
 #define FVUPDATEWINDOW_H
 
-#if QT_VERSION >= 0x050000
-    #include <QtWidgets/QWidget>
-#else
-    #include <QWidget>
-#endif
+#include <QWidget>
 
 class QGraphicsScene;
 

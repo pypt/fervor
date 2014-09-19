@@ -810,12 +810,12 @@ void FvUpdater::finishUpdate(QString pathToFinish)
 void FvUpdater::restartApplication()
 {
 	// Spawn a new instance of myApplication:
-    QString app = QApplication::applicationFilePath();
-    QStringList arguments = QApplication::arguments();
+    QString app = QCoreApplication::applicationFilePath();
+    QStringList arguments = QCoreApplication::arguments();
     QString wd = QDir::currentPath();
     qDebug() << app << arguments << wd;
     QProcess::startDetached(app, arguments, wd);
-    QApplication::exit();
+    QCoreApplication::exit();
 }
 
 void FvUpdater::setRequiredSslFingerPrint(QString md5)
