@@ -7,6 +7,7 @@
 #include <QUrl>
 #include <QXmlStreamReader>
 class QNetworkReply;
+class QSettings;
 class FvUpdateWindow;
 class FvUpdateConfirmDialog;
 class FvAvailableUpdate;
@@ -29,7 +30,7 @@ public:
 	void finishUpdate(QString pathToFinish = "");
 	void setRequiredSslFingerPrint(QString md5);
 	QString getRequiredSslFingerPrint();	// returns md5!
-	// HTTP Authentuication - for security reasons no getters are provided, only a setter
+    // HTTP Authentication - for security reasons no getters are provided, only a setter
 	void setHtAuthCredentials(QString user, QString pass);
 	void setHtAuthUsername(QString user);
 	void setHtAuthPassword(QString pass);
@@ -37,7 +38,10 @@ public:
 	void setRemindLaterAllowed(bool allowed);
 	bool getSkipVersionAllowed();
 	bool getRemindLaterAllowed();
-
+	// This is to set QSettings object which is shared with the rest of user application.
+	// We will use the settings, but we will not own it. Someone else should be responsible for freeing the object.
+    static void setSettings(QSettings *settings);
+	static QSettings* getSettings();
 	
 public slots:
 
@@ -83,7 +87,7 @@ private:
 	FvUpdater& operator=(const FvUpdater&);	// Hide assign op
 
 	static FvUpdater* m_Instance;			// Singleton instance
-
+	static QSettings* m_Settings;
 
 	//
 	// Windows / dialogs
