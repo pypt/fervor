@@ -28,9 +28,8 @@
 #	include "fvversioncomparatortest.h"
 #endif
 
-extern QSettings* settings;
-
 FvUpdater* FvUpdater::m_Instance = 0;
+QSettings* FvUpdater::m_Settings = 0;
 
 FvUpdater* FvUpdater::sharedUpdater()
 {
@@ -55,6 +54,31 @@ void FvUpdater::drop()
 	delete m_Instance;
 	m_Instance = 0;
 	mutex.unlock();
+}
+
+void FvUpdater::setSettings(QSettings* settings)
+{
+	m_Settings = settings;
+}
+
+QSettings* FvUpdater::getSettings()
+{
+	static QMutex mutex;
+	if (! m_Settings) {
+		mutex.lock();
+
+		if (!m_Settings) {
+            QSettings settings(QSettings::NativeFormat,
+						QSettings::UserScope,
+						QCoreApplication::organizationDomain(),
+						QCoreApplication::applicationName());
+            m_Settings = &settings;
+		}
+
+		mutex.unlock();
+	}
+
+	return m_Settings;
 }
 
 FvUpdater::FvUpdater() : QObject(0)
@@ -891,10 +915,9 @@ bool FvUpdater::getRemindLaterAllowed()
 }
 
 #ifndef FV_GUI
-
 void FvUpdater::decideWhatToDoWithCurrentUpdateProposal()
 {
-	QString policy = settings->value(FV_NEW_VERSION_POLICY_KEY).toString();
+	QString policy = getSettings()->value(FV_NEW_VERSION_POLICY_KEY).toString();
 	if(policy == "install")
 		InstallUpdate();
 	else if(policy == "skip")
