@@ -1,6 +1,6 @@
 ## Fervor
 
-![[Build status](https://travis-ci.org/alex-97/fervor.svg)]
+![Build status](https://travis-ci.org/alex-97/fervor.svg)
 
 Check out the [`autoupdate` branch](fervor/tree/autoupdate) by Torben Dannhauer too!
 
