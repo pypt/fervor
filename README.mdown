@@ -4,12 +4,7 @@
 
 Check out the [`autoupdate` branch](fervor/tree/autoupdate) by Torben Dannhauer too!
 
-----
-
-Fervor is a simple, multiplatform ([Qt](http://qt.nokia.com/)-based) application update tool, inspired by [Sparkle](http://sparkle.andymatuschak.org/).
-
-
-# Description
+---
 
 Fervor is a software library that you include into your own [Qt](http://qt.nokia.com/)-based application in order to enable the application to automatically check for updates and suggest to install them.
 
