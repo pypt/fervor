@@ -48,5 +48,6 @@ HEADERS += \
 FORMS += $$PWD/fvupdatewindow.ui \
         $$PWD/fvupdateconfirmdialog.ui
 
-TRANSLATIONS += $$PWD/fervor_lt.ts
+TRANSLATIONS += $$PWD/fervor_lt.ts \
+		$$PWD/fervor_it.ts
 CODECFORTR = UTF-8
