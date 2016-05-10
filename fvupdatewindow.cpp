@@ -6,7 +6,6 @@
 #include <QCloseEvent>
 #include <QDebug>
 
-
 FvUpdateWindow::FvUpdateWindow(QWidget *parent) :
 	QWidget(parent),
 	m_ui(new Ui::FvUpdateWindow)
@@ -14,6 +13,10 @@ FvUpdateWindow::FvUpdateWindow(QWidget *parent) :
 	m_ui->setupUi(this);
 
 	m_appIconScene = 0;
+
+	relNotes = findChild<QTextBrowser*>("relNotes");
+	net = new QNetworkAccessManager();
+	connect(net, SIGNAL(finished(QNetworkReply*)), this, SLOT(writeChangelog(QNetworkReply*)));
 
 	// Delete on close
 	setAttribute(Qt::WA_DeleteOnClose, true);
@@ -33,7 +36,7 @@ FvUpdateWindow::FvUpdateWindow(QWidget *parent) :
 
 FvUpdateWindow::~FvUpdateWindow()
 {
-	m_ui->releaseNotesWebView->stop();
+	//m_ui->releaseNotesWebView->stop();
 	delete m_ui;
 }
 
@@ -48,8 +51,7 @@ bool FvUpdateWindow::UpdateWindowWithCurrentProposedUpdate()
 			.arg(QString::fromUtf8(FV_APP_NAME), proposedUpdate->GetEnclosureVersion(), QString::fromUtf8(FV_APP_VERSION));
 	m_ui->wouldYouLikeToDownloadLabel->setText(downloadString);
 
-	m_ui->releaseNotesWebView->stop();
-	m_ui->releaseNotesWebView->load(proposedUpdate->GetReleaseNotesLink());
+	net->get(QNetworkRequest(QUrl(proposedUpdate->GetReleaseNotesLink().toString())));
 
 	return true;
 }
@@ -58,4 +60,12 @@ void FvUpdateWindow::closeEvent(QCloseEvent* event)
 {
 	FvUpdater::sharedUpdater()->updaterWindowWasClosed();
 	event->accept();
+}
+
+void FvUpdateWindow::writeChangelog(QNetworkReply* reply){
+    QByteArray data=reply->readAll();
+    QString str(data);
+
+    relNotes->setHtml(str);
+
 }
