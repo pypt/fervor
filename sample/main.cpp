@@ -1,4 +1,4 @@
-#include <QtGui/QApplication>
+#include <QApplication>
 #include "mainwindow.h"
 #include "fvupdater.h"
 
@@ -19,6 +19,6 @@ int main(int argc, char *argv[])
 	// Show main window
 	MainWindow w;
 	w.show();
-	
+
 	return a.exec();
 }
