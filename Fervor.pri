@@ -1,4 +1,4 @@
-QT += core gui webkit webkitwidgets network
+QT += core gui webenginewidgets network
 
 isEmpty(FV_APP_NAME) {
 	warning("Fervor: falling back to application name '$$TARGET'")

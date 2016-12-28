@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>FvUpdateWindow</class>
  <widget class="QWidget" name="FvUpdateWindow">
@@ -49,7 +49,7 @@
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_7">
         <item>
-         <widget class="QWebView" name="releaseNotesWebView">
+         <widget class="QWebEngineView" name="releaseNotesWebView">
           <property name="minimumSize">
            <size>
             <width>160</width>
@@ -116,9 +116,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QWebView</class>
+   <class>QWebEngineView</class>
    <extends>QWidget</extends>
-   <header>QtWebKit/QWebView</header>
+   <header>QWebEngineView</header>
   </customwidget>
  </customwidgets>
  <resources/>
