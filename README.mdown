@@ -1,11 +1,10 @@
+## Fervor
+
+![Build status](https://travis-ci.org/alex-97/fervor.svg)
+
 Check out the [`autoupdate` branch](fervor/tree/autoupdate) by Torben Dannhauer too!
 
-----
-
-Fervor is a simple, multiplatform ([Qt](http://qt.nokia.com/)-based) application update tool, inspired by [Sparkle](http://sparkle.andymatuschak.org/).
-
-
-# Description
+---
 
 Fervor is a software library that you include into your own [Qt](http://qt.nokia.com/)-based application in order to enable the application to automatically check for updates and suggest to install them.
 
@@ -13,8 +12,7 @@ When installed and enabled, Fervor downloads a "flavoured" RSS feed (dubbed "app
 
 When a newer version of the application is found in the "appcast" (e.g. the user is using 1.0, and 1.1 is available), a dialog is presented to the user (see below for example) that allows the user to choose whether he/she wants to install the update, be reminded about the update later, or skip a particular proposed version altogether. A dialog also shows some release notes about the proposed update that help the user to choose whether or not to install an update.
 
-At the moment, Fervor is not as cool as [Sparkle](http://sparkle.andymatuschak.org/) -- it is not able to install the actual update automatically (the user is given an option to download and install the update manually). Pull requests with unattended install modules for `.dmg`, `.pkg` (Mac OS X), `.msi` (Windows), `.rpm`, `.deb` (Linux) are welcome!
-
+Fervor also supports downloading and installing the updates directly from the application using an integrated dowload dialog.
 
 # Features
 
@@ -29,9 +27,6 @@ At the moment, Fervor is not as cool as [Sparkle](http://sparkle.andymatuschak.o
 # Screenshots
 
 ![](http://pypt.github.com/fervor/screenshot-1.png "Update is available")
-
-![](http://pypt.github.com/fervor/screenshot-2.png "Download the update")
-
 
 # Installation and Usage
 

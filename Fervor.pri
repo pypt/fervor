@@ -34,7 +34,7 @@ SOURCES += \
         $$PWD/fvplatform.cpp \
         $$PWD/fvignoredversions.cpp \
         $$PWD/fvavailableupdate.cpp \
-        $$PWD/fvupdateconfirmdialog.cpp
+        $$PWD/fvdownloaddialog.cpp
 
 HEADERS += \
         $$PWD/fvupdatewindow.h \
@@ -43,10 +43,12 @@ HEADERS += \
         $$PWD/fvplatform.h \
         $$PWD/fvignoredversions.h \
         $$PWD/fvavailableupdate.h \
-        $$PWD/fvupdateconfirmdialog.h
+        $$PWD/fvdownloaddialog.h
 
 FORMS += $$PWD/fvupdatewindow.ui \
-        $$PWD/fvupdateconfirmdialog.ui
+         $$PWD/fvdownloaddialog.ui
 
 TRANSLATIONS += $$PWD/fervor_lt.ts
 CODECFORTR = UTF-8
+
+RESOURCES += $$PWD/fv_resources.qrc

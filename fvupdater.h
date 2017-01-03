@@ -6,10 +6,11 @@
 #include <QNetworkAccessManager>
 #include <QUrl>
 #include <QXmlStreamReader>
-class FvUpdateWindow;
-class FvUpdateConfirmDialog;
-class FvAvailableUpdate;
 
+
+class FvUpdateWindow;
+class FvAvailableUpdate;
+class FvDownloadDialog;
 
 class FvUpdater : public QObject
 {
@@ -46,7 +47,7 @@ public slots:
 protected:
 
 	friend class FvUpdateWindow;		// Uses GetProposedUpdate() and others
-	friend class FvUpdateConfirmDialog;	// Uses GetProposedUpdate() and others
+    friend class FvDownloadDialog;      // Uses GetProposedUpdate() and others
 	FvAvailableUpdate* GetProposedUpdate();
 
 
@@ -80,14 +81,12 @@ private:
 	// Windows / dialogs
 	//
 	FvUpdateWindow* m_updaterWindow;								// Updater window (NULL if not shown)
-	void showUpdaterWindowUpdatedWithCurrentUpdateProposal();		// Show updater window
+    void showUpdaterWindowUpdatedWithCurrentUpdateProposal();		// Show updater window
 	void hideUpdaterWindow();										// Hide + destroy m_updaterWindow
 	void updaterWindowWasClosed();									// Sent by the updater window when it gets closed
 
-	FvUpdateConfirmDialog* m_updateConfirmationDialog;						// Update confirmation dialog (NULL if not shown)
-	void showUpdateConfirmationDialogUpdatedWithCurrentUpdateProposal();	// Show update confirmation dialog
-	void hideUpdateConfirmationDialog();									// Hide + destroy m_updateConfirmationDialog
-	void updateConfirmationDialogWasClosed();								// Sent by the update confirmation dialog when it gets closed
+    void hideDownloadDialog();									// Hide + destroy m_updateConfirmationDialog
+    void downloadDialogWasClosed();								// Sent by the update confirmation dialog when it gets closed
 
 	// Available update (NULL if not fetched)
 	FvAvailableUpdate* m_proposedUpdate;
@@ -144,6 +143,11 @@ private:
 	// Helpers
 	//
 	void installTranslator();			// Initialize translation mechanism
+
+    //
+    // Download dialog
+    //
+    FvDownloadDialog *m_download_dialog;
 
 };
 
